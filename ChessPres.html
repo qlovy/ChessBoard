@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<!--Cette page web contient la présentation du projet de faire un échiquier sur une page web-->
+<html lang="en">
+    <head>
+        <title>The Chess presentation</title>
+        
+        <!--Police Phudu medium 500-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@500&display=swap" rel="stylesheet">
+        
+        <!--Police Shantell Sans light 300-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Shantell+Sans:wght@300&display=swap" rel="stylesheet">
+        
+        <!--Police Quicksand Regular 400-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+
+        <!--Le CSS-->
+        <style>
+            body{
+                font-family: 'Shantell Sans', cursive;
+                background-color: #381a09; 
+            }
+            h1{
+                font-family: 'Phudu', cursive;
+                text-align: center;
+                font-size: 60px;
+                margin-top: 30px;
+                color: #cc4a00;
+            }
+            /*INTRODUCTION ET CAHIER DES CHARGES*/
+            .paragraphe{
+                font-size: 25px;
+                color: #bd6b3d;
+                margin-top: 150px;
+                text-align: center;
+                line-height: 2em;
+            }
+
+            /*DOCUMENTATION*/
+            .documentation{
+                background-color: #072659;
+                height:max-content;
+                position: relative;
+                margin-top: 300px;
+                margin-left: -7px;
+                margin-right: -8px;
+                border-radius: 20px;
+                border-style: solid;
+                border-color: #043687;
+            }
+            .documentation p {
+                color: white;
+                text-align: center;
+                font-size: 25px;
+                padding: 20px;
+                margin: 20px;
+                margin-top: 60px;
+            }
+            .documentation .colonnes{
+                margin-top: 200px;
+                background-color: #031a40;
+                width: 1200px;
+                position: relative;
+                left: 350px;
+                padding-top: 30px;
+                border-radius: 20px;
+            }
+            .documentation .texteColonne {
+                text-align: justify;
+            }
+            .documentation .colonnes .titleOfColumns {
+                font-size: 30px;
+                color: white;
+                text-align: center;
+            }
+            .documentation .colonnes .texteColonne p {
+                color: white;
+                text-align: justify;
+                margin-left: 40px;
+                margin-right: 40px;
+                margin-bottom: 50px;
+                line-height: 2em;/*Cela permet de modifier l'interligne*/
+                font-size: 25px;
+            }
+
+            /*RAPPORT DU JOUR*/
+            .rapportDuJour{
+                background-color: white;
+                margin-left: -7px;
+                margin-right: -8px;
+                border-style: solid;
+                border-color: #003d34;
+                border-width: 3px;
+                color: #003d34;
+                font-family: 'Quicksand', sans-serif;
+                font-size: 25px;
+            }
+            .rapportDuJour h3{
+                font-size: 40px;
+                text-align: center;
+                margin-top: 60px;
+                margin-bottom: 100px;
+            }
+            .TableauType{
+                margin-left: 200px;
+                margin-top:100px;
+                line-height: 1.5em;
+                width: 1500px;
+                text-align: center;
+                padding: 10px;
+            }
+            .TableauType {
+                border-collapse: collapse;/*Créer des bordures intérieures*/
+            }
+            th, td {
+                border: 1px solid #09675a;/*bordure de 1 px solid(complet quoi) la couleur*/
+                padding: 5px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!--le tritre-->
+        <h1>Le jeu d'échecs sur une page web</h1>
+
+        <!--l'introduction-->
+        <div class="paragraphe">
+            <p>Le but de ce projet est de créer un échiquier sur une  page web.<br>
+                 On veut que ce soit simple d'utilisation et que les régles de bases des échecs soient respectées.<br>
+                On veut un joli design inspiré de Chess.com mais si on arrive à avoir un nouveau design perso c'est mieux.<br>
+            </p>
+        </div>
+
+        <!--la documentation-->
+        <div class="documentation">
+                <p>Ici, on aura toute la documentation sur le projet. <br>Chaque problème rencontré et les solutions trouvées seront repertoriés ici.</p>
+                
+                <div class="colonnes">
+                    <div class="texteColonne">
+                        <h3 class="titleOfColumns">L'interligne en CSS</h3>
+                        <p>J'ai découvert la propriété line-height qui permet de contrôler l'interligne. Pour plus d'info MDN docs.</p>
+                    </div>
+                    <div class="texteColonne">
+                        <h3 class="titleOfColumns">Le tableau en CSS</h3>
+                        <p>J'ai redécouvert la manière dont on créer un tableau. Ainsi que les différentes propriétés qui vont avec. Pour plus d'info regarder le code et MDN docs.</p>
+                    </div>
+                    <div class="texteColonne">
+                        <h3 class="titleOfColumns">P3</h3>
+                        <p>Illud autem non dubitatur quod cum esset aliquando virtutum omnium domicilium Roma, ingenuos advenas plerique nobilium, ut Homerici bacarum suavitate Lotophagi, humanitatis multiformibus officiis retentabant.</p>
+                    </div>
+                </div>
+        </div>
+
+        <!--le rapport du jour-->
+        <div class="rapportDuJour">
+            <h3>Le Rapport Du Jour</h3>
+
+            <table class="TableauType">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Fichiers</th>
+                        <th>Description</th>
+                        <th>Etat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>19.02.23</td>
+                        <td>ChessPres.html, index.html, script.js et style.css</td>
+                        <td>Création de fichiers</td>
+                        <td>F</td><!-- NF = non fait, EC = en cours, F = fait-->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
