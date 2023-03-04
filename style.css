@@ -1,3 +1,10 @@
+
+/*GENERAL*/
+
 h1 {
     font-family: 'Pacifico', cursive;
+    margin: 60px;
+}
+#TheBodyChessBoard {
+    background-color: #34495e;
 }

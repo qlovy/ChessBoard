@@ -8,12 +8,17 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 
-        <!--On les documents externes-->
-        <script src="script.js"></script>
-        <style src="style.css"></style>
+        <!--On lie les documents externes-->
+        <script src = 'script.js'></script>
+        <link rel="stylesheet" href="style.css">
+
     </head>
-    <body>
+    <body id="TheBodyChessBoard">
         <h1>The Chessboard</h1>
-        <div id="ChessBoard"></div>
+        <div id="ChessBoard">
+            <canvas id="Canvas">
+                <p>Here is a beautiful chess board</p><!--Texte affiché si le canvas n'est pas supporté par le navigateur-->
+            </canvas>
+        </div>
     </body>
 </html>
