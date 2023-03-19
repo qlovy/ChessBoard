@@ -8,3 +8,10 @@ h1 {
 #TheBodyChessBoard {
     background-color: #34495e;
 }
+
+/*CHESSBOARD*/
+
+#canvas {
+    margin-left: 100px;
+    margin-top: 70px;
+}
