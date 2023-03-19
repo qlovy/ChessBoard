@@ -12,6 +12,6 @@ h1 {
 /*CHESSBOARD*/
 
 #canvas {
-    margin-left: 100px;
-    margin-top: 70px;
+    position:absolute;
+    left: 330px;
 }
