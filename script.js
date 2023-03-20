@@ -13,6 +13,8 @@ const Board = function(config){
     this.dimension = config.dimension;
     this.color1 = config.color1 || 'rgb(255, 255, 255)';
     this.color2 = config.color2 || 'rgb(0, 0, 0)';
+    this.pieces = [[null, null],
+                    [new Pawn, null]];
 }
 
 Board.prototype.draw = function(){
@@ -58,8 +60,28 @@ Board.prototype.draw = function(){
     ctx.font = '20px sans-serif';
     ctx.fillText(8 - h, this.x - 25, this.y + 38 +  h * this.dimension);
     }
+    for(let i = 0; i < this.pieces.length;i++){//première dimension (lignes)
+        for(let j = 0;j < this.pieces[i].length;j++){//deuxième dimension (colonnes)
+            let piece = this.pieces[i][j];
+            if(piece !== null){
+                piece.draw(j * this.dimension + 50, i * this.dimension + 50);
+            }
+        }
+    }
+    console.log(this.pieces);
 }
 
+/*Les pièces*/
+
+const Pawn = function(config){
+    this.image = new Image();
+    this.image.src = 'Pawn.png';
+}
+
+Pawn.prototype.draw = function(x, y){
+    console.log('le x: ' + x + '  le y: ' + y);
+    ctx.drawImage(this.image, x, y);
+}
 
 const TheBoard = new Board({
     x: 50,
