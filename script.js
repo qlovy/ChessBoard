@@ -14,7 +14,7 @@ const Board = function(config){
     this.x = config.x;
     this.y = config.y;
     this.dimension = config.dimension;
-    this.color1 = config.color1 || 'rgb(255, 255, 255)';
+    this.color1 = config.color1 || 'rgb(192, 190, 190)';
     this.color2 = config.color2 || 'rgb(205, 97, 51)';
     this.pieces = [[],[],[],[],[],[],[],[]];
 }
@@ -90,17 +90,17 @@ Board.prototype.draw = function(){
 //Le pion noir
 const PawnB = function(config){
     this.image = new Image();
-    this.image.src = 'PawnB.png';
+    this.image.src = 'img/Theme1/PawnB.png';
 }
 
 PawnB.prototype.draw = function(x, y){
     console.log('le x: ' + x + '  le y: ' + y);
     ctx.drawImage(this.image, x, y);
 }
-//le pion blanc
+//le pion blanc sur case noir
 const PawnW = function(config){
     this.image = new Image();
-    this.image.src = 'PawnW.png';
+    this.image.src = 'img/Theme1/PawnW.png';
 }
 
 PawnW.prototype.draw = function(x, y){
