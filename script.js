@@ -108,7 +108,9 @@ var PawnB = function(){
     //la fonction call() permet d'avoir les mêmes attribut que le PieceRef. Plus info: https://developer.mozilla.org/fr/docs/Learn/JavaScript/Objects/Classes_in_JavaScript
 }
 PawnB.prototype = Object.create(PieceRef.prototype);
+//permet à PawnB d'avoir toutes les méthodes de PieceRef(la fonction draw).
 PawnB.prototype.constructor = PawnB;
+//fait que le constructeur de PawnB soit PawnB et non PieceRef
 
 //le pion blanc
 var PawnW = function(){
