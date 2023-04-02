@@ -89,7 +89,7 @@ Board.prototype.draw = function(){
 
 //PION
 
-//Le pion noir
+//le pion noir
 const PawnB = function(config){
     this.image = new Image();
     this.image.src = 'img/Theme1/PawnB.png';
@@ -99,7 +99,8 @@ PawnB.prototype.draw = function(x, y){
     console.log('le x: ' + x + '  le y: ' + y);
     ctx.drawImage(this.image, x, y);
 }
-//le pion blanc sur case noir
+
+//le pion blanc
 const PawnW = function(config){
     this.image = new Image();
     this.image.src = 'img/Theme1/PawnW.png';
@@ -110,10 +111,72 @@ PawnW.prototype.draw = function(x, y){
     ctx.drawImage(this.image, x, y);
 }
 
+//FOU
+
+//le fou noir
+const BishopB = function(){
+    this.image = new Image();
+    this.image.src = 'img/Theme1/BishopB.png';
+}
+
+//le fou blanc
+const BishopW = function(){
+    this.image = new Image();
+    this.image.src = 'img/Theme1/BishopW.png';
+}
+
+//CHEVAL
+
+//le cheval noir
+const KnightB = function(){
+    this.image = new Image();
+    this.image.src = 'img/Theme1/KnightB.png';
+}
+
+//le cheval blanc
+const KnightW = function(){
+    this.image = new Image();
+    this.image.src = 'img/Theme1/KnightW.png';
+}
+
+//REINE
+
+//la reine noir
+const QueenB = function(){
+    this.image = new Image();
+    this.image.src = 'img/Theme1/QueenB.png';
+}
+
+//la reine blanche
+const QueenW = function(){
+    this.image = new Image();
+    this.image.src = 'img/Theme1/QueenW.png';
+}
+
+//ROI
+
+//le roi noir
+const KingB = function(){
+    this.image = new Image();
+    this.image.src = 'img/Theme1/KingB.png';
+}
+
+//le roi blanc
+const KingW = function(){
+    this.image = new Image();
+    this.image.src = 'img/Theme1/KingW.png';
+}
+
+
+/*Application des variables*/
+
+//on donne les varleurs nécessaires à la création de l'échiquier
 const TheBoard = new Board({
+    //la position dans le canvas
     x: 50,
     y: 50,
-    dimension: 75,
+    dimension: 75,//c'est la dimension des cases
 });
 
+//dessin de l'échiquier
 TheBoard.draw();
