@@ -89,14 +89,14 @@ Board.prototype.draw = function(){
 
 //PIECE DE JEU
 
-//c'est la pièce de base
+//c'est la pièce de base, son but est d'être le "parent" des autres pièces et ainsi de leur donner ces attributs.
 var PieceRef = function(src){
     this.image = new Image();
     this.image.src = src;
 }
 
+//fonction qui la dessine
 PieceRef.prototype.draw = function(x, y){
-    console.log('le x: ' + x + '  le y: ' + y);
     ctx.drawImage(this.image, x, y);
 }
 
@@ -107,11 +107,15 @@ var PawnB = function(){
     PieceRef.call(this, 'img/Theme1/PawnB.png');
     //la fonction call() permet d'avoir les mêmes attribut que le PieceRef. Plus info: https://developer.mozilla.org/fr/docs/Learn/JavaScript/Objects/Classes_in_JavaScript
 }
+PawnB.prototype = Object.create(PieceRef.prototype);
+PawnB.prototype.constructor = PawnB;
 
 //le pion blanc
 var PawnW = function(){
     PieceRef.call(this, 'img/Theme1/PawnW.png');
 }
+PawnW.prototype = Object.create(PieceRef.prototype);
+PawnW.prototype.constructor = PawnW;
 
 //FOU
 
@@ -119,11 +123,15 @@ var PawnW = function(){
 var BishopB = function(){
     PieceRef.call(this, 'img/Theme1/BishopB.png');
 }
+BishopB.prototype = Object.create(PieceRef.prototype);
+BishopB.prototype.constructor = BishopB;
 
 //le fou blanc
 var BishopW = function(){
     PieceRef.call(this, 'img/Theme1/BishopW.png');
 }
+BishopW.prototype = Object.create(PieceRef.prototype);
+BishopW.prototype.constructor = BishopW;
 
 //CHEVAL
 
@@ -131,11 +139,15 @@ var BishopW = function(){
 var KnightB = function(){
     PieceRef.call(this, 'img/Theme1/KnightB.png');
 }
+KnightB.prototype = Object.create(PieceRef.prototype);
+KnightB.prototype.constructor = KnightB;
 
 //le cheval blanc
 var KnightW = function(){
     PieceRef.call(this, 'img/Theme1/KnightW.png');
 }
+KnightW.prototype = Object.create(PieceRef.prototype);
+KnightW.prototype.constructor = KnightW;
 
 //REINE
 
@@ -143,11 +155,15 @@ var KnightW = function(){
 var QueenB = function(){
     PieceRef.call(this, 'img/Theme1/QueenB.png');
 }
+QueenB.prototype = Object.create(PieceRef.prototype);
+QueenB.prototype.constructor = QueenB;
 
 //la reine blanche
 var QueenW = function(){
     PieceRef.call(this, 'img/Theme1/QueenW.png');
 }
+QueenW.prototype = Object.create(PieceRef.prototype);
+QueenW.prototype.constructor = QueenW;
 
 //ROI
 
@@ -155,12 +171,15 @@ var QueenW = function(){
 var KingB = function(){
     PieceRef.call(this, 'img/Theme1/KingB.png');
 }
+KingB.prototype = Object.create(PieceRef.prototype);
+KingB.prototype.constructor = KingB;
 
 //le roi blanc
 var KingW = function(){
     PieceRef.call(this, 'img/Theme1/KingW.png');
 }
-
+KingW.prototype = Object.create(PieceRef.prototype);
+KingW.prototype.constructor = KingW;
 
 /*Application des variables*/
 
