@@ -1,16 +1,16 @@
 /*CANVAS*/
 
-const canvas = document.querySelector("#canvas");//cela nous permet de prendre toutes les informations nécessaires.
-const width = canvas.width = 700;
-const height = canvas.height = 700;
-const ctx = canvas.getContext('2d');//l'environnement du canvas, ici en deux dimensions.
+var canvas = document.querySelector("#canvas");//cela nous permet de prendre toutes les informations nécessaires.
+var width = canvas.width = 700;
+var height = canvas.height = 700;
+var ctx = canvas.getContext('2d');//l'environnement du canvas, ici en deux dimensions.
 
 //variable général
-const nbCase = 8;
+var nbCase = 8;
 
 /*BOARD*/
 
-const Board = function(config){
+var Board = function(config){
     this.x = config.x;
     this.y = config.y;
     this.dimension = config.dimension;
@@ -87,91 +87,85 @@ Board.prototype.draw = function(){
 
 /*Les pièces*/
 
+//PIECE DE JEU
+
+//c'est la pièce de base
+var PieceRef = function(src){
+    this.image = new Image();
+    this.image.src = src;
+}
+
+PieceRef.prototype.draw = function(x, y){
+    console.log('le x: ' + x + '  le y: ' + y);
+    ctx.drawImage(this.image, x, y);
+}
+
 //PION
 
 //le pion noir
-const PawnB = function(config){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/PawnB.png';
-}
-
-PawnB.prototype.draw = function(x, y){
-    console.log('le x: ' + x + '  le y: ' + y);
-    ctx.drawImage(this.image, x, y);
+var PawnB = function(){
+    PieceRef.call(this, 'img/Theme1/PawnB.png');
+    //la fonction call() permet d'avoir les mêmes attribut que le PieceRef. Plus info: https://developer.mozilla.org/fr/docs/Learn/JavaScript/Objects/Classes_in_JavaScript
 }
 
 //le pion blanc
-const PawnW = function(config){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/PawnW.png';
-}
-
-PawnW.prototype.draw = function(x, y){
-    console.log('le x: ' + x + '  le y: ' + y);
-    ctx.drawImage(this.image, x, y);
+var PawnW = function(){
+    PieceRef.call(this, 'img/Theme1/PawnW.png');
 }
 
 //FOU
 
 //le fou noir
-const BishopB = function(){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/BishopB.png';
+var BishopB = function(){
+    PieceRef.call(this, 'img/Theme1/BishopB.png');
 }
 
 //le fou blanc
-const BishopW = function(){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/BishopW.png';
+var BishopW = function(){
+    PieceRef.call(this, 'img/Theme1/BishopW.png');
 }
 
 //CHEVAL
 
 //le cheval noir
-const KnightB = function(){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/KnightB.png';
+var KnightB = function(){
+    PieceRef.call(this, 'img/Theme1/KnightB.png');
 }
 
 //le cheval blanc
-const KnightW = function(){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/KnightW.png';
+var KnightW = function(){
+    PieceRef.call(this, 'img/Theme1/KnightW.png');
 }
 
 //REINE
 
 //la reine noir
-const QueenB = function(){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/QueenB.png';
+var QueenB = function(){
+    PieceRef.call(this, 'img/Theme1/QueenB.png');
 }
 
 //la reine blanche
-const QueenW = function(){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/QueenW.png';
+var QueenW = function(){
+    PieceRef.call(this, 'img/Theme1/QueenW.png');
 }
 
 //ROI
 
 //le roi noir
-const KingB = function(){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/KingB.png';
+var KingB = function(){
+    PieceRef.call(this, 'img/Theme1/KingB.png');
 }
 
 //le roi blanc
-const KingW = function(){
-    this.image = new Image();
-    this.image.src = 'img/Theme1/KingW.png';
+var KingW = function(){
+    PieceRef.call(this, 'img/Theme1/KingW.png');
 }
 
 
 /*Application des variables*/
 
 //on donne les varleurs nécessaires à la création de l'échiquier
-const TheBoard = new Board({
+var TheBoard = new Board({
     //la position dans le canvas
     x: 50,
     y: 50,
