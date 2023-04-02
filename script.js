@@ -87,6 +87,8 @@ Board.prototype.draw = function(){
 
 /*Les pièces*/
 
+//PION
+
 //Le pion noir
 const PawnB = function(config){
     this.image = new Image();
