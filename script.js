@@ -5,12 +5,19 @@ var width = canvas.width = 700;
 var height = canvas.height = 700;
 var ctx = canvas.getContext('2d');//l'environnement du canvas, ici en deux dimensions.
 
-//variable général
+/*variables générales*/
+
 var nbCase = 8;
+
+//les joueurs
+const Player = {
+    White: 'W',
+    Black: 'B'
+}
 
 /*BOARD*/
 
-var Board = function(config){
+function Board(config){
     this.x = config.x;
     this.y = config.y;
     this.dimension = config.dimension;
@@ -65,12 +72,15 @@ Board.prototype.draw = function(){
     //ajout des pions de manière automatique
     for(let i = 0; i < nbCase; i++){
         for(let j = 0; j < nbCase; j++){
+            //ajout pion noir sur la 7 ème rangée
             if(i === 1){
-                this.pieces[i][j] = new PawnB();
+                this.pieces[i][j] = new Pawn(Player.Black);
             }
+            //ajout pion blanc sur la 2 ème rangée
             if(i === 6){
-                this.pieces[i][j] = new PawnW();
+                this.pieces[i][j] = new Pawn(Player.White);
             }
+            //ajout fou noir
         }
     }
     //l'integration des pièces dans le tableau qui représente les cases
@@ -90,9 +100,10 @@ Board.prototype.draw = function(){
 //PIECE DE JEU
 
 //c'est la pièce de base, son but est d'être le "parent" des autres pièces et ainsi de leur donner ces attributs.
-var PieceRef = function(src){
+function PieceRef(player){
+    this.player = player;
     this.image = new Image();
-    this.image.src = src;
+    this.image.src = 'img/Theme1/' + this.constructor.name + player + '.png';
 }
 
 //fonction qui la dessine
@@ -101,87 +112,42 @@ PieceRef.prototype.draw = function(x, y){
 }
 
 //PION
-
-//le pion noir
-var PawnB = function(){
-    PieceRef.call(this, 'img/Theme1/PawnB.png');
+function Pawn(player){
+    PieceRef.call(this, player);
     //la fonction call() permet d'avoir les mêmes attribut que le PieceRef. Plus info: https://developer.mozilla.org/fr/docs/Learn/JavaScript/Objects/Classes_in_JavaScript
 }
-PawnB.prototype = Object.create(PieceRef.prototype);
-//permet à PawnB d'avoir toutes les méthodes de PieceRef(la fonction draw).
-PawnB.prototype.constructor = PawnB;
-//fait que le constructeur de PawnB soit PawnB et non PieceRef
-
-//le pion blanc
-var PawnW = function(){
-    PieceRef.call(this, 'img/Theme1/PawnW.png');
-}
-PawnW.prototype = Object.create(PieceRef.prototype);
-PawnW.prototype.constructor = PawnW;
+Pawn.prototype = Object.create(PieceRef.prototype);
+//permet à Pawn d'avoir toutes les méthodes de PieceRef(la fonction draw).
+Pawn.prototype.constructor = Pawn;
+//fait que le constructeur de Pawn soit Pawn et non PieceRef
 
 //FOU
-
-//le fou noir
-var BishopB = function(){
-    PieceRef.call(this, 'img/Theme1/BishopB.png');
+function Bishop(player){
+    PieceRef.call(this, player);
 }
-BishopB.prototype = Object.create(PieceRef.prototype);
-BishopB.prototype.constructor = BishopB;
-
-//le fou blanc
-var BishopW = function(){
-    PieceRef.call(this, 'img/Theme1/BishopW.png');
-}
-BishopW.prototype = Object.create(PieceRef.prototype);
-BishopW.prototype.constructor = BishopW;
+Bishop.prototype = Object.create(PieceRef.prototype);
+Bishop.prototype.constructor = Bishop;
 
 //CHEVAL
-
-//le cheval noir
-var KnightB = function(){
-    PieceRef.call(this, 'img/Theme1/KnightB.png');
+function Knight(player){
+    PieceRef.call(this, player);
 }
-KnightB.prototype = Object.create(PieceRef.prototype);
-KnightB.prototype.constructor = KnightB;
-
-//le cheval blanc
-var KnightW = function(){
-    PieceRef.call(this, 'img/Theme1/KnightW.png');
-}
-KnightW.prototype = Object.create(PieceRef.prototype);
-KnightW.prototype.constructor = KnightW;
+Knight.prototype = Object.create(PieceRef.prototype);
+Knight.prototype.constructor = Knight;
 
 //REINE
-
-//la reine noir
-var QueenB = function(){
-    PieceRef.call(this, 'img/Theme1/QueenB.png');
+function Queen(player){
+    PieceRef.call(this, player);
 }
-QueenB.prototype = Object.create(PieceRef.prototype);
-QueenB.prototype.constructor = QueenB;
-
-//la reine blanche
-var QueenW = function(){
-    PieceRef.call(this, 'img/Theme1/QueenW.png');
-}
-QueenW.prototype = Object.create(PieceRef.prototype);
-QueenW.prototype.constructor = QueenW;
+Queen.prototype = Object.create(PieceRef.prototype);
+Queen.prototype.constructor = Queen;
 
 //ROI
-
-//le roi noir
-var KingB = function(){
-    PieceRef.call(this, 'img/Theme1/KingB.png');
+var King = function(player){
+    PieceRef.call(this, player);
 }
-KingB.prototype = Object.create(PieceRef.prototype);
-KingB.prototype.constructor = KingB;
-
-//le roi blanc
-var KingW = function(){
-    PieceRef.call(this, 'img/Theme1/KingW.png');
-}
-KingW.prototype = Object.create(PieceRef.prototype);
-KingW.prototype.constructor = KingW;
+King.prototype = Object.create(PieceRef.prototype);
+King.prototype.constructor = King;
 
 /*Application des variables*/
 
