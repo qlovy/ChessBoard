@@ -181,7 +181,7 @@ Queen.prototype = Object.create(PieceRef.prototype);
 Queen.prototype.constructor = Queen;
 
 //ROI
-var King = function (player) {
+function King(player) {
     PieceRef.call(this, player);
 }
 King.prototype = Object.create(PieceRef.prototype);
