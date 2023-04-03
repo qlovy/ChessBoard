@@ -21,8 +21,8 @@ function Board(config){
     this.x = config.x;
     this.y = config.y;
     this.dimension = config.dimension;
-    this.color1 = config.color1 || 'rgb(192, 190, 190)';
-    this.color2 = config.color2 || 'rgb(205, 97, 51)';
+    this.color1 = config.color1 || 'rgb(205, 97, 51)';
+    this.color2 = config.color2 || 'rgb(192, 190, 190)';
     this.pieces = [[],[],[],[],[],[],[],[]];
 }
 
@@ -69,18 +69,49 @@ Board.prototype.draw = function(){
     ctx.font = '20px sans-serif';
     ctx.fillText(8 - h, this.x - 25, this.y + 38 +  h * this.dimension);
     }
-    //ajout des pions de manière automatique
+    //ajout des pièces de manière automatique
     for(let i = 0; i < nbCase; i++){
         for(let j = 0; j < nbCase; j++){
-            //ajout pion noir sur la 7 ème rangée
+            if(i === 0){
+                if(j === 0 || j === 7){
+                    this.pieces[i][j] = new Rook(Player.Black);
+                }
+                if(j === 1 || j === 6){
+                    this.pieces[i][j] = new Knight(Player.Black);
+                }
+                if(j === 2 || j === 5){
+                    this.pieces[i][j] = new Bishop(Player.Black);
+                }
+                if(j === 3){
+                    this.pieces[i][j] = new Queen(Player.Black);
+                }
+                if(j === 4){
+                    this.pieces[i][j] = new King(Player.Black);
+                }
+            }
             if(i === 1){
                 this.pieces[i][j] = new Pawn(Player.Black);
             }
-            //ajout pion blanc sur la 2 ème rangée
             if(i === 6){
                 this.pieces[i][j] = new Pawn(Player.White);
             }
-            //ajout fou noir
+            if(i === 7){
+                if(j === 0 || j === 7){
+                    this.pieces[i][j] = new Rook(Player.White);
+                }
+                if(j === 1 || j === 6){
+                    this.pieces[i][j] = new Knight(Player.White);
+                }
+                if(j === 2 || j === 5){
+                    this.pieces[i][j] = new Bishop(Player.White);
+                }
+                if(j === 3){
+                    this.pieces[i][j] = new Queen(Player.White);
+                }
+                if(j === 4){
+                    this.pieces[i][j] = new King(Player.White);
+                }
+            }
         }
     }
     //l'integration des pièces dans le tableau qui représente les cases
@@ -120,6 +151,13 @@ Pawn.prototype = Object.create(PieceRef.prototype);
 //permet à Pawn d'avoir toutes les méthodes de PieceRef(la fonction draw).
 Pawn.prototype.constructor = Pawn;
 //fait que le constructeur de Pawn soit Pawn et non PieceRef
+
+//TOUR
+function Rook(player){
+    PieceRef.call(this, player);
+}
+Rook.prototype = Object.create(PieceRef.prototype);
+Rook.prototype.constructor = Rook;
 
 //FOU
 function Bishop(player){
