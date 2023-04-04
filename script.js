@@ -7,14 +7,26 @@ var ctx = canvas.getContext('2d');//l'environnement du canvas, ici en deux dimen
 
 /*variables générales*/
 
-var nbCase = 8;
+const nbCase = 8;
 
 //les joueurs
 const Player = {
     White: 'W',
     Black: 'B'
 }
+const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
+function cordinateToAlgebric(x, y){
+    return String.fromCharCode(x + 97) + (8 - y);
+}
+function algebricToCordinate(algebric){
+    let charX = algebric.substr(0, 1);
+    let charY = algebric.substr(1, 1);
+    return {
+        x: charX.charCodeAt(0),
+        y: 8- (parseInt(charY) - 97)
+    };
+}
 /*BOARD*/
 
 function Board(config) {
@@ -57,9 +69,8 @@ Board.prototype.draw = function () {
                 //les lettres en lignes
                 if (i === 7 && h === 7) {
                     for (let j = 0; j < nbCase; j++) {
-                        let Alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
                         ctx.fillStyle = 'rgb(255, 255, 255)';
-                        ctx.fillText(Alphabet[j], this.x + 32 + j * this.dimension, this.y + 25 + (h + 1) * this.dimension);
+                        ctx.fillText(letters[j], this.x + 32 + j * this.dimension, this.y + 25 + (h + 1) * this.dimension);
                     }
                 }
             }
@@ -122,9 +133,9 @@ Board.prototype.draw = function () {
             if (piece !== null) {
                 piece.draw(j * this.dimension + 50, i * this.dimension + 50);//dessin de la pièce en fonction de ses propriétés
             }
-
         }
     }
+    console.log(lettersDigit);
 }
 
 /*Les pièces*/
