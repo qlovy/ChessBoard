@@ -59,7 +59,7 @@ Board.prototype.draw = function () {
                     for (let j = 0; j < nbCase; j++) {
                         let Alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
                         ctx.fillStyle = 'rgb(255, 255, 255)';
-                        ctx.fillText(Alphabet[j], this.x + 38 + j * this.dimension, this.y + 25 + (h + 1) * this.dimension);
+                        ctx.fillText(Alphabet[j], this.x + 32 + j * this.dimension, this.y + 25 + (h + 1) * this.dimension);
                     }
                 }
             }
@@ -67,7 +67,7 @@ Board.prototype.draw = function () {
         //les chiffres en colonnes
         ctx.fillStyle = 'rgb(255,255,255)';
         ctx.font = '20px sans-serif';
-        ctx.fillText(8 - h, this.x - 25, this.y + 38 + h * this.dimension);
+        ctx.fillText(8 - h, this.x - 25, this.y + 42 + h * this.dimension);
     }
     //ajout des pièces de manière automatique
     for (let i = 0; i < nbCase; i++) {
@@ -92,6 +92,7 @@ Board.prototype.draw = function () {
             if (i === 1) {
                 this.pieces[i][j] = new Pawn(Player.Black);
             }
+
             if (i === 6) {
                 this.pieces[i][j] = new Pawn(Player.White);
             }
@@ -121,9 +122,9 @@ Board.prototype.draw = function () {
             if (piece !== null) {
                 piece.draw(j * this.dimension + 50, i * this.dimension + 50);//dessin de la pièce en fonction de ses propriétés
             }
+
         }
     }
-    console.log(this.pieces);
 }
 
 /*Les pièces*/
