@@ -126,7 +126,7 @@ Board.prototype.draw = function () {
             }
         }
     }
-    //l'integration des pièces dans le tableau qui représente les cases
+    //integration des pièces dans le tableau qui représente les cases
     for (let i = 0; i < this.pieces.length; i++) {//première dimension (lignes)
         for (let j = 0; j < this.pieces[i].length; j++) {//deuxième dimension (colonnes)
             let piece = this.pieces[i][j];
@@ -135,7 +135,8 @@ Board.prototype.draw = function () {
             }
         }
     }
-    console.log(lettersDigit);
+    console.log(cordinateToAlgebric(50, 50));
+    console.log(algebricToCordinate("a1"));
 }
 
 /*Les pièces*/
@@ -157,13 +158,15 @@ PieceRef.prototype.draw = function (x, y) {
 //PION
 function Pawn(player) {
     PieceRef.call(this, player);
-    //la fonction call() permet d'avoir les mêmes attribut que le PieceRef. Plus info: https://developer.mozilla.org/fr/docs/Learn/JavaScript/Objects/Classes_in_JavaScript
+    //la fonction call() permet d'avoir les mêmes attributs que le PieceRef. Plus info: https://developer.mozilla.org/fr/docs/Learn/JavaScript/Objects/Classes_in_JavaScript
 }
 Pawn.prototype = Object.create(PieceRef.prototype);
 //permet à Pawn d'avoir toutes les méthodes de PieceRef(la fonction draw).
 Pawn.prototype.constructor = Pawn;
 //fait que le constructeur de Pawn soit Pawn et non PieceRef
-
+Pawn.prototype.move = function(x, y){
+    this.actualCordinate = cordinateToAlgebric(x, y);
+}
 //TOUR
 function Rook(player) {
     PieceRef.call(this, player);
@@ -201,7 +204,7 @@ King.prototype.constructor = King;
 
 /*Application des variables*/
 
-//on donne les varleurs nécessaires à la création de l'échiquier
+//on donne les valeurs nécessaires à la création de l'échiquier
 var TheBoard = new Board({
     //la position dans le canvas
     x: 50,
