@@ -16,26 +16,37 @@ const Player = {
 }
 const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
-function cordinateToAlgebric(x, y){
+function cordinateToAlgebric(x, y) {
     return String.fromCharCode(x + 97) + (8 - y);
 }
-function algebricToCordinate(algebric){
+
+function algebricToCordinate(algebric) {
     let charX = algebric.substr(0, 1);
     let charY = algebric.substr(1, 1);
     return {
-        x: charX.charCodeAt(0),
-        y: 8- (parseInt(charY) - 97)
+        x: charX.charCodeAt(0) - 97,
+        y: 8 - (parseInt(charY))
     };
 }
+
 /*BOARD*/
 
 function Board(config) {
+    let me = this;
     this.x = config.x;
     this.y = config.y;
     this.dimension = config.dimension;
     this.color1 = config.color1 || 'rgb(205, 97, 51)';
     this.color2 = config.color2 || 'rgb(192, 190, 190)';
     this.pieces = [[], [], [], [], [], [], [], []];
+    canvas.addEventListener('mousedown', (e) => {
+        let rect = canvas.getBoundingClientRect();
+        let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);
+        let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
+        console.log(x, y);
+        let currentPiece = me.pieces[x][y];
+        console.log(currentPiece.whereCanMove(x, y));
+    })
 }
 
 Board.prototype.draw = function () {
@@ -81,47 +92,47 @@ Board.prototype.draw = function () {
         ctx.fillText(8 - h, this.x - 25, this.y + 42 + h * this.dimension);
     }
     //ajout des pièces de manière automatique
-    for (let i = 0; i < nbCase; i++) {
-        for (let j = 0; j < nbCase; j++) {
-            if (i === 0) {
-                if (j === 0 || j === 7) {
-                    this.pieces[i][j] = new Rook(Player.Black);
+    for (let x = 0; x < nbCase; x++) {
+        for (let y = 0; y < nbCase; y++) {
+            if (y === 0) {
+                if (x === 0 || x === 7) {
+                    this.pieces[x][y] = new Rook(Player.Black);
                 }
-                if (j === 1 || j === 6) {
-                    this.pieces[i][j] = new Knight(Player.Black);
+                if (x === 1 || x === 6) {
+                    this.pieces[x][y] = new Knight(Player.Black);
                 }
-                if (j === 2 || j === 5) {
-                    this.pieces[i][j] = new Bishop(Player.Black);
+                if (x === 2 || x === 5) {
+                    this.pieces[x][y] = new Bishop(Player.Black);
                 }
-                if (j === 3) {
-                    this.pieces[i][j] = new Queen(Player.Black);
+                if (x === 3) {
+                    this.pieces[x][y] = new Queen(Player.Black);
                 }
-                if (j === 4) {
-                    this.pieces[i][j] = new King(Player.Black);
+                if (x === 4) {
+                    this.pieces[x][y] = new King(Player.Black);
                 }
             }
-            if (i === 1) {
-                this.pieces[i][j] = new Pawn(Player.Black);
+            if (y === 1) {
+                this.pieces[x][y] = new Pawn(Player.Black);
             }
 
-            if (i === 6) {
-                this.pieces[i][j] = new Pawn(Player.White);
+            if (y === 6) {
+                this.pieces[x][y] = new Pawn(Player.White);
             }
-            if (i === 7) {
-                if (j === 0 || j === 7) {
-                    this.pieces[i][j] = new Rook(Player.White);
+            if (y === 7) {
+                if (x === 0 || x === 7) {
+                    this.pieces[x][y] = new Rook(Player.White);
                 }
-                if (j === 1 || j === 6) {
-                    this.pieces[i][j] = new Knight(Player.White);
+                if (x === 1 || x === 6) {
+                    this.pieces[x][y] = new Knight(Player.White);
                 }
-                if (j === 2 || j === 5) {
-                    this.pieces[i][j] = new Bishop(Player.White);
+                if (x === 2 || x === 5) {
+                    this.pieces[x][y] = new Bishop(Player.White);
                 }
-                if (j === 3) {
-                    this.pieces[i][j] = new Queen(Player.White);
+                if (x === 3) {
+                    this.pieces[x][y] = new Queen(Player.White);
                 }
-                if (j === 4) {
-                    this.pieces[i][j] = new King(Player.White);
+                if (x === 4) {
+                    this.pieces[x][y] = new King(Player.White);
                 }
             }
         }
@@ -135,8 +146,6 @@ Board.prototype.draw = function () {
             }
         }
     }
-    console.log(cordinateToAlgebric(50, 50));
-    console.log(algebricToCordinate("a1"));
 }
 
 /*Les pièces*/
@@ -160,17 +169,62 @@ function Pawn(player) {
     PieceRef.call(this, player);
     //la fonction call() permet d'avoir les mêmes attributs que le PieceRef. Plus info: https://developer.mozilla.org/fr/docs/Learn/JavaScript/Objects/Classes_in_JavaScript
 }
+
 Pawn.prototype = Object.create(PieceRef.prototype);
 //permet à Pawn d'avoir toutes les méthodes de PieceRef(la fonction draw).
 Pawn.prototype.constructor = Pawn;
 //fait que le constructeur de Pawn soit Pawn et non PieceRef
-Pawn.prototype.move = function(x, y){
-    this.actualCordinate = cordinateToAlgebric(x, y);
+
+Pawn.prototype.whereCanMove = function (x, y) {
+    console.log(this.player);
+    if (this.player === Player.Black) {
+        if (y === 1) {
+            return [
+                {
+                    x: x,
+                    y: y + 1
+                },
+                {
+                    x: x,
+                    y: y + 2
+                }
+            ]
+        } else {
+            return [
+                {
+                    x: x,
+                    y: y + 1
+                }
+            ]
+        }
+    } else {
+        if (y === 6) {
+            return [
+                {
+                    x: x,
+                    y: y - 1
+                },
+                {
+                    x: x,
+                    y: y - 2
+                }
+            ]
+        } else {
+            return [
+                {
+                    x: x,
+                    y: y - 1
+                }
+            ]
+        }
+    }
 }
+
 //TOUR
 function Rook(player) {
     PieceRef.call(this, player);
 }
+
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
 
@@ -178,6 +232,7 @@ Rook.prototype.constructor = Rook;
 function Bishop(player) {
     PieceRef.call(this, player);
 }
+
 Bishop.prototype = Object.create(PieceRef.prototype);
 Bishop.prototype.constructor = Bishop;
 
@@ -185,6 +240,7 @@ Bishop.prototype.constructor = Bishop;
 function Knight(player) {
     PieceRef.call(this, player);
 }
+
 Knight.prototype = Object.create(PieceRef.prototype);
 Knight.prototype.constructor = Knight;
 
@@ -192,6 +248,7 @@ Knight.prototype.constructor = Knight;
 function Queen(player) {
     PieceRef.call(this, player);
 }
+
 Queen.prototype = Object.create(PieceRef.prototype);
 Queen.prototype.constructor = Queen;
 
@@ -199,6 +256,7 @@ Queen.prototype.constructor = Queen;
 function King(player) {
     PieceRef.call(this, player);
 }
+
 King.prototype = Object.create(PieceRef.prototype);
 King.prototype.constructor = King;
 
