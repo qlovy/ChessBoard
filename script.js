@@ -8,14 +8,17 @@ var ctx = canvas.getContext('2d');//l'environnement du canvas, ici en deux dimen
 /*variables générales*/
 
 const nbCase = 8;
-
 //les joueurs
 const Player = {
     White: 'W',
     Black: 'B'
 }
 const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+var currentPiece;
+var currentPiecePosition;
 
+
+/*Les fonctions générales*/
 function cordinateToAlgebric(x, y) {
     return String.fromCharCode(x + 97) + (8 - y);
 }
@@ -41,47 +44,73 @@ function Board(config) {
     this.pieces = [[], [], [], [], [], [], [], []];
     canvas.addEventListener('mousedown', (e) => {
         let rect = canvas.getBoundingClientRect();
+        let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);//Math.floor arrondi à l'inférieure.
+        let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
+        currentPiece = me.pieces[x][y];
+        currentPiecePosition = {x: x, y: y};
+        let possibilityCurrentPiece = currentPiece.whereCanMove(x, y);
+        //reset l'affichage des possibilités de la pièce
+        TheBoard.draw();
+        //dessin des possibilités si on a appuyé avec le clique gauche
+        if (e.which === 1) {
+            for (let i = 0; i < possibilityCurrentPiece.length; i++) {
+                ctx.fillStyle = '#8e44ad';
+                ctx.beginPath();
+                ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                ctx.fill();
+            }
+        }
+    });
+    canvas.addEventListener('mouseup', (e) => {
+        let rect = canvas.getBoundingClientRect();
         let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);
         let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
-        console.log(x, y);
-        let currentPiece = me.pieces[x][y];
-        console.log(currentPiece.whereCanMove(x, y));
-    })
+        let possibilityCurrentPiece = currentPiece.whereCanMove(currentPiecePosition.x, currentPiecePosition.y);
+        if (e.which === 1) {
+            for (let i = 0; i < possibilityCurrentPiece.length; i++) {
+                if(x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y){
+                    me.pieces[x][y] = currentPiece;
+                    me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
+                }
+            }
+        }   
+        TheBoard.draw();
+    });
 }
 
 Board.prototype.draw = function () {
 
     //Les cases et les cordonnées
 
-    for (let h = 0; h < nbCase; h++) {
-        if (h % 2 === 0) {//les colonnes paires
-            for (let x = 0; x < nbCase; x++) {
+    for (let x = 0; x < nbCase; x++) {
+        if (x % 2 === 0) {//les colonnes paires
+            for (let y = 0; y < nbCase; y++) {
                 //choix de la couleur en fonction de x
-                if (x % 2 === 0) {
+                if (y % 2 === 0) {
                     ctx.fillStyle = this.color2;
                 } else {
                     ctx.fillStyle = this.color1;
                 }
                 ctx.beginPath();
-                ctx.rect(this.x + x * this.dimension, this.y + h * this.dimension, this.dimension, this.dimension);
+                ctx.rect(this.x + y * this.dimension, this.y + x * this.dimension, this.dimension, this.dimension);
                 ctx.fill();
             }
         } else {//les colonnes impaires
-            for (let x = 0; x < nbCase; x++) {
+            for (let y = 0; y < nbCase; y++) {
                 //choix de la couleur en fonction de x
-                if (x % 2 === 0) {
+                if (y % 2 === 0) {
                     ctx.fillStyle = this.color1;
                 } else {
                     ctx.fillStyle = this.color2;
                 }
                 ctx.beginPath();
-                ctx.rect(this.x + x * this.dimension, this.y + h * this.dimension, this.dimension, this.dimension);
+                ctx.rect(this.x + y * this.dimension, this.y + x * this.dimension, this.dimension, this.dimension);
                 ctx.fill();
                 //les lettres en lignes
-                if (x === 7 && h === 7) {
+                if (y === 7 && x === 7) {
                     for (let y = 0; y < nbCase; y++) {
                         ctx.fillStyle = 'rgb(255, 255, 255)';
-                        ctx.fillText(letters[y], this.x + 32 + y * this.dimension, this.y + 25 + (h + 1) * this.dimension);
+                        ctx.fillText(letters[y], this.x + 32 + y * this.dimension, this.y + 25 + (x + 1) * this.dimension);
                     }
                 }
             }
@@ -89,7 +118,7 @@ Board.prototype.draw = function () {
         //les chiffres en colonnes
         ctx.fillStyle = 'rgb(255,255,255)';
         ctx.font = '20px sans-serif';
-        ctx.fillText(8 - h, this.x - 25, this.y + 42 + h * this.dimension);
+        ctx.fillText(8 - x, this.x - 25, this.y + 42 + x * this.dimension);
     }
     //ajout des pièces de manière automatique
     for (let x = 0; x < nbCase; x++) {
@@ -137,7 +166,6 @@ Board.prototype.draw = function () {
             }
         }
     }
-    console.log(this.pieces);
     //integration des pièces dans le tableau qui représente les cases
     for (let x = 0; x < this.pieces.length; x++) {//première dimension (lignes)
         for (let y = 0; y < this.pieces[x].length; y++) {//deuxième dimension (colonnes)
@@ -148,6 +176,7 @@ Board.prototype.draw = function () {
         }
     }
 }
+
 
 /*Les pièces*/
 
@@ -184,7 +213,6 @@ Pawn.prototype.constructor = Pawn;
 //fait que le constructeur de Pawn soit Pawn et non PieceRef
 //gère les endroits où peut aller le pion
 Pawn.prototype.whereCanMove = function (x, y) {
-    console.log(this.player);
     if (this.player === Player.Black) {
         if (y === 1) {
             return [
@@ -272,15 +300,15 @@ King.prototype.constructor = King;
 /*Changement du thème de fond*/
 var changeTheme = document.getElementById('ChangeTheme');
 var bodyTheme = document.querySelector('body');
-changeTheme.addEventListener('click', change = function(){
+changeTheme.addEventListener('click', function change() {
     let actualColor = bodyTheme.style.backgroundColor;
     let colorPrint = {
         1: 'rgb(52, 73, 94)',
         2: 'rgb(241, 196, 15)'
     };
-    if(actualColor !== colorPrint[1]){
+    if (actualColor !== colorPrint[1]) {
         bodyTheme.style.backgroundColor = colorPrint[1];
-    }else{
+    } else {
         bodyTheme.style.backgroundColor = colorPrint[2];
     }
 });
