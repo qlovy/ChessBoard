@@ -55,33 +55,33 @@ Board.prototype.draw = function () {
 
     for (let h = 0; h < nbCase; h++) {
         if (h % 2 === 0) {//les colonnes paires
-            for (let i = 0; i < nbCase; i++) {
-                //choix de la couleur en fonction de i
-                if (i % 2 === 0) {
+            for (let x = 0; x < nbCase; x++) {
+                //choix de la couleur en fonction de x
+                if (x % 2 === 0) {
                     ctx.fillStyle = this.color2;
                 } else {
                     ctx.fillStyle = this.color1;
                 }
                 ctx.beginPath();
-                ctx.rect(this.x + i * this.dimension, this.y + h * this.dimension, this.dimension, this.dimension);
+                ctx.rect(this.x + x * this.dimension, this.y + h * this.dimension, this.dimension, this.dimension);
                 ctx.fill();
             }
         } else {//les colonnes impaires
-            for (let i = 0; i < nbCase; i++) {
-                //choix de la couleur en fonction de i
-                if (i % 2 === 0) {
+            for (let x = 0; x < nbCase; x++) {
+                //choix de la couleur en fonction de x
+                if (x % 2 === 0) {
                     ctx.fillStyle = this.color1;
                 } else {
                     ctx.fillStyle = this.color2;
                 }
                 ctx.beginPath();
-                ctx.rect(this.x + i * this.dimension, this.y + h * this.dimension, this.dimension, this.dimension);
+                ctx.rect(this.x + x * this.dimension, this.y + h * this.dimension, this.dimension, this.dimension);
                 ctx.fill();
                 //les lettres en lignes
-                if (i === 7 && h === 7) {
-                    for (let j = 0; j < nbCase; j++) {
+                if (x === 7 && h === 7) {
+                    for (let y = 0; y < nbCase; y++) {
                         ctx.fillStyle = 'rgb(255, 255, 255)';
-                        ctx.fillText(letters[j], this.x + 32 + j * this.dimension, this.y + 25 + (h + 1) * this.dimension);
+                        ctx.fillText(letters[y], this.x + 32 + y * this.dimension, this.y + 25 + (h + 1) * this.dimension);
                     }
                 }
             }
@@ -137,12 +137,13 @@ Board.prototype.draw = function () {
             }
         }
     }
+    console.log(this.pieces);
     //integration des pièces dans le tableau qui représente les cases
-    for (let i = 0; i < this.pieces.length; i++) {//première dimension (lignes)
-        for (let j = 0; j < this.pieces[i].length; j++) {//deuxième dimension (colonnes)
-            let piece = this.pieces[i][j];
+    for (let x = 0; x < this.pieces.length; x++) {//première dimension (lignes)
+        for (let y = 0; y < this.pieces[x].length; y++) {//deuxième dimension (colonnes)
+            let piece = this.pieces[x][y];
             if (piece !== null) {
-                piece.draw(j * this.dimension + 50, i * this.dimension + 50);//dessin de la pièce en fonction de ses propriétés
+                piece.draw(x * this.dimension + 50, y * this.dimension + 50);//dessin de la pièce en fonction de ses propriétés
             }
         }
     }
@@ -174,7 +175,7 @@ Pawn.prototype = Object.create(PieceRef.prototype);
 //permet à Pawn d'avoir toutes les méthodes de PieceRef(la fonction draw).
 Pawn.prototype.constructor = Pawn;
 //fait que le constructeur de Pawn soit Pawn et non PieceRef
-
+//gère les endroits où peut aller le pion
 Pawn.prototype.whereCanMove = function (x, y) {
     console.log(this.player);
     if (this.player === Player.Black) {
