@@ -142,7 +142,7 @@ Board.prototype.draw = function () {
     for (let x = 0; x < this.pieces.length; x++) {//première dimension (lignes)
         for (let y = 0; y < this.pieces[x].length; y++) {//deuxième dimension (colonnes)
             let piece = this.pieces[x][y];
-            if (piece !== null) {
+            if (piece) {
                 piece.draw(x * this.dimension + 50, y * this.dimension + 50);//dessin de la pièce en fonction de ses propriétés
             }
         }
