@@ -162,7 +162,14 @@ function PieceRef(player) {
 
 //fonction qui la dessine
 PieceRef.prototype.draw = function (x, y) {
-    ctx.drawImage(this.image, x, y);
+    let image = this.image;
+    if (image.complete) {
+        ctx.drawImage(image, x, y);
+    } else {
+        image.onload = function () {
+            ctx.drawImage(image, x, y);
+        }
+    }
 }
 
 //PION
