@@ -268,6 +268,24 @@ function King(player) {
 King.prototype = Object.create(PieceRef.prototype);
 King.prototype.constructor = King;
 
+
+/*Changement du thème de fond*/
+var changeTheme = document.getElementById('ChangeTheme');
+var bodyTheme = document.querySelector('body');
+changeTheme.addEventListener('click', change = function(){
+    let actualColor = bodyTheme.style.backgroundColor;
+    let colorPrint = {
+        1: 'rgb(52, 73, 94)',
+        2: 'rgb(241, 196, 15)'
+    };
+    if(actualColor !== colorPrint[1]){
+        bodyTheme.style.backgroundColor = colorPrint[1];
+    }else{
+        bodyTheme.style.backgroundColor = colorPrint[2];
+    }
+});
+
+
 /*Application des variables*/
 
 //on donne les valeurs nécessaires à la création de l'échiquier
