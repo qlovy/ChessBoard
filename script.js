@@ -1,9 +1,9 @@
 /*CANVAS*/
 
-var canvas = document.querySelector("#canvas");//cela nous permet de prendre toutes les informations nécessaires.
-var width = canvas.width = 700;
-var height = canvas.height = 700;
-var ctx = canvas.getContext('2d');//l'environnement du canvas, ici en deux dimensions.
+const canvas = document.querySelector("#canvas");//cela nous permet de prendre toutes les informations nécessaires.
+const width = canvas.width = 700;
+const height = canvas.height = 700;
+const ctx = canvas.getContext('2d');//l'environnement du canvas, ici en deux dimensions.
 
 /*variables générales*/
 
@@ -14,9 +14,9 @@ const Player = {
     Black: 'B'
 }
 const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-var currentPiece;
-var currentPiecePosition;
-
+let currentPiece;
+let currentPiecePosition;
+let atStart = true;
 
 /*Les fonctions générales*/
 function cordinateToAlgebric(x, y) {
@@ -49,14 +49,21 @@ function Board(config) {
         currentPiece = me.pieces[x][y];
         currentPiecePosition = {x: x, y: y};
         let possibilityCurrentPiece = currentPiece.whereCanMove(x, y);
+        let possibilityCurrentPieceEat = currentPiece.whereCanEat(x, y);//seulement pour le pion
         //reset l'affichage des possibilités de la pièce
         TheBoard.draw();
-        //dessin des possibilités si on a appuyé avec le clique gauche
+        //dessin des possibilités si on a appuyé avec le click gauche
         if (e.which === 1) {
             for (let i = 0; i < possibilityCurrentPiece.length; i++) {
                 ctx.fillStyle = '#8e44ad';
                 ctx.beginPath();
                 ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                ctx.fill();
+            }
+            for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
+                ctx.fillStyle = '#16a085';
+                ctx.beginPath();
+                ctx.arc(possibilityCurrentPieceEat[i].x * this.dimension + 50 + Math.round(this.dimension/2), possibilityCurrentPieceEat[i].y * this.dimension + 50 + Math.round(this.dimension/2), 10, 0, 360);
                 ctx.fill();
             }
         }
@@ -66,14 +73,23 @@ function Board(config) {
         let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);
         let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
         let possibilityCurrentPiece = currentPiece.whereCanMove(currentPiecePosition.x, currentPiecePosition.y);
+        let possibilityCurrentPieceEat = currentPiece.whereCanEat(currentPiecePosition.x, currentPiecePosition.y);//seulement pour le pion
         if (e.which === 1) {
             for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                if(x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y){
+                if (x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y) {
                     me.pieces[x][y] = currentPiece;
                     me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
                 }
             }
-        }   
+            for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
+                if(x === possibilityCurrentPieceEat[i].x && y === possibilityCurrentPieceEat[i].y){
+                    if(me.pieces[x][y] !== undefined){
+                        me.pieces[x][y] = currentPiece;
+                        me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
+                    }
+                }
+            }
+        }
         TheBoard.draw();
     });
 }
@@ -121,51 +137,55 @@ Board.prototype.draw = function () {
         ctx.fillText(8 - x, this.x - 25, this.y + 42 + x * this.dimension);
     }
     //ajout des pièces de manière automatique
-    for (let x = 0; x < nbCase; x++) {
-        for (let y = 0; y < nbCase; y++) {
-            if (y === 0) {
-                if (x === 0 || x === 7) {
-                    this.pieces[x][y] = new Rook(Player.Black);
+    if(atStart === true){//s'exécute seulement au départ
+        for (let x = 0; x < nbCase; x++) {
+            for (let y = 0; y < nbCase; y++) {
+                if (y === 0) {
+                    if (x === 0 || x === 7) {
+                        this.pieces[x][y] = new Rook(Player.Black);
+                    }
+                    if (x === 1 || x === 6) {
+                        this.pieces[x][y] = new Knight(Player.Black);
+                    }
+                    if (x === 2 || x === 5) {
+                        this.pieces[x][y] = new Bishop(Player.Black);
+                    }
+                    if (x === 3) {
+                        this.pieces[x][y] = new Queen(Player.Black);
+                    }
+                    if (x === 4) {
+                        this.pieces[x][y] = new King(Player.Black);
+                    }
                 }
-                if (x === 1 || x === 6) {
-                    this.pieces[x][y] = new Knight(Player.Black);
+                if (y === 1) {
+                    this.pieces[x][y] = new Pawn(Player.Black);
                 }
-                if (x === 2 || x === 5) {
-                    this.pieces[x][y] = new Bishop(Player.Black);
-                }
-                if (x === 3) {
-                    this.pieces[x][y] = new Queen(Player.Black);
-                }
-                if (x === 4) {
-                    this.pieces[x][y] = new King(Player.Black);
-                }
-            }
-            if (y === 1) {
-                this.pieces[x][y] = new Pawn(Player.Black);
-            }
 
-            if (y === 6) {
-                this.pieces[x][y] = new Pawn(Player.White);
-            }
-            if (y === 7) {
-                if (x === 0 || x === 7) {
-                    this.pieces[x][y] = new Rook(Player.White);
+                if (y === 6) {
+                    this.pieces[x][y] = new Pawn(Player.White);
                 }
-                if (x === 1 || x === 6) {
-                    this.pieces[x][y] = new Knight(Player.White);
-                }
-                if (x === 2 || x === 5) {
-                    this.pieces[x][y] = new Bishop(Player.White);
-                }
-                if (x === 3) {
-                    this.pieces[x][y] = new Queen(Player.White);
-                }
-                if (x === 4) {
-                    this.pieces[x][y] = new King(Player.White);
+                if (y === 7) {
+                    if (x === 0 || x === 7) {
+                        this.pieces[x][y] = new Rook(Player.White);
+                    }
+                    if (x === 1 || x === 6) {
+                        this.pieces[x][y] = new Knight(Player.White);
+                    }
+                    if (x === 2 || x === 5) {
+                        this.pieces[x][y] = new Bishop(Player.White);
+                    }
+                    if (x === 3) {
+                        this.pieces[x][y] = new Queen(Player.White);
+                    }
+                    if (x === 4) {
+                        this.pieces[x][y] = new King(Player.White);
+                    }
                 }
             }
         }
+        atStart = false;
     }
+
     //integration des pièces dans le tableau qui représente les cases
     for (let x = 0; x < this.pieces.length; x++) {//première dimension (lignes)
         for (let y = 0; y < this.pieces[x].length; y++) {//deuxième dimension (colonnes)
@@ -249,6 +269,63 @@ Pawn.prototype.whereCanMove = function (x, y) {
             return [
                 {
                     x: x,
+                    y: y - 1
+                }
+            ]
+        }
+    }
+}
+Pawn.prototype.whereCanEat = function(x, y){
+    if(this.player === Player.Black){
+        if(x === 0) {
+            return [
+                {
+                    x: x + 1,
+                    y: y + 1
+                }
+            ]
+        }if(x === 7){
+            return [
+                {
+                    x: x - 1,
+                    y: y + 1
+                }
+            ]
+        }else{
+            return [
+                {
+                    x: x - 1,
+                    y: y + 1
+                },
+                {
+                    x: x + 1,
+                    y: y + 1
+                }
+            ]
+        }
+    }else{
+        if(x === 0) {
+            return [
+                {
+                    x: x + 1,
+                    y: y - 1
+                }
+            ]
+        }if(x === 7){
+            return [
+                {
+                    x: x - 1,
+                    y: y - 1
+                }
+            ]
+        }else{
+            return [
+                {
+                    x: x -1,
+                    y: y - 1
+                },
+                {
+                    x: x + 1,
                     y: y - 1
                 }
             ]
