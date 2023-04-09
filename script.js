@@ -55,16 +55,20 @@ function Board(config) {
         //dessin des possibilités si on a appuyé avec le click gauche
         if (e.which === 1) {
             for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                ctx.fillStyle = '#8e44ad';
-                ctx.beginPath();
-                ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
-                ctx.fill();
+                if(me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined){
+                    ctx.fillStyle = '#8e44ad';
+                    ctx.beginPath();
+                    ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                    ctx.fill();
+                }
             }
             for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
-                ctx.fillStyle = '#16a085';
-                ctx.beginPath();
-                ctx.arc(possibilityCurrentPieceEat[i].x * this.dimension + 50 + Math.round(this.dimension/2), possibilityCurrentPieceEat[i].y * this.dimension + 50 + Math.round(this.dimension/2), 10, 0, 360);
-                ctx.fill();
+                if(me.pieces[possibilityCurrentPieceEat[i].x][possibilityCurrentPieceEat[i].y] !== undefined){
+                    ctx.fillStyle = '#16a085';
+                    ctx.beginPath();
+                    ctx.arc(possibilityCurrentPieceEat[i].x * this.dimension + 50 + Math.round(this.dimension/2), possibilityCurrentPieceEat[i].y * this.dimension + 50 + Math.round(this.dimension/2), 10, 0, 360);
+                    ctx.fill();
+                }
             }
         }
     });
@@ -77,8 +81,10 @@ function Board(config) {
         if (e.which === 1) {
             for (let i = 0; i < possibilityCurrentPiece.length; i++) {
                 if (x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y) {
-                    me.pieces[x][y] = currentPiece;
-                    me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
+                    if(me.pieces[x][y] === undefined){
+                        me.pieces[x][y] = currentPiece;
+                        me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
+                    }
                 }
             }
             for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
@@ -234,104 +240,113 @@ Pawn.prototype.constructor = Pawn;
 //gère les endroits où peut aller le pion
 Pawn.prototype.whereCanMove = function (x, y) {
     if (this.player === Player.Black) {
-        if (y === 1) {
-            return [
-                {
-                    x: x,
-                    y: y + 1
-                },
-                {
-                    x: x,
-                    y: y + 2
-                }
-            ]
-        } else {
-            return [
-                {
-                    x: x,
-                    y: y + 1
-                }
-            ]
-        }
+        if(y !== 7){
+            if (y === 1) {
+                return [
+                    {
+                        x: x,
+                        y: y + 1
+                    },
+                    {
+                        x: x,
+                        y: y + 2
+                    }
+                ]
+            } else {
+                return [
+                    {
+                        x: x,
+                        y: y + 1
+                    }
+                ]
+            }
+        }    
     } else {
-        if (y === 6) {
-            return [
-                {
-                    x: x,
-                    y: y - 1
-                },
-                {
-                    x: x,
-                    y: y - 2
-                }
-            ]
-        } else {
-            return [
-                {
-                    x: x,
-                    y: y - 1
-                }
-            ]
+        if(y !== 0){
+            if (y === 6) {
+                return [
+                    {
+                        x: x,
+                        y: y - 1
+                    },
+                    {
+                        x: x,
+                        y: y - 2
+                    }
+                ]
+            } else {
+                return [
+                    {
+                        x: x,
+                        y: y - 1
+                    }
+                ]
+            }
         }
     }
 }
 Pawn.prototype.whereCanEat = function(x, y){
     if(this.player === Player.Black){
-        if(x === 0) {
-            return [
-                {
+        if(y !== 7){
+            if(x === 0) {
+                return [
+                    {
+                        x: x + 1,
+                        y: y + 1
+                    }
+                ]
+            }if(x === 7){
+                return [
+                    {
+                        x: x - 1,
+                        y: y + 1
+                    }
+                ]
+            }else{
+                return [
+                    {
+                        x: x - 1,
+                        y: y + 1
+                    },
+                    {
                     x: x + 1,
                     y: y + 1
                 }
             ]
-        }if(x === 7){
-            return [
-                {
-                    x: x - 1,
-                    y: y + 1
-                }
-            ]
-        }else{
-            return [
-                {
-                    x: x - 1,
-                    y: y + 1
-                },
-                {
-                    x: x + 1,
-                    y: y + 1
-                }
-            ]
+            }
         }
     }else{
-        if(x === 0) {
-            return [
-                {
-                    x: x + 1,
-                    y: y - 1
-                }
-            ]
-        }if(x === 7){
-            return [
-                {
-                    x: x - 1,
-                    y: y - 1
-                }
-            ]
-        }else{
-            return [
-                {
-                    x: x -1,
-                    y: y - 1
-                },
-                {
-                    x: x + 1,
-                    y: y - 1
-                }
-            ]
+        if(y !== 0){
+            if(x === 0) {
+                return [
+                    {
+                        x: x + 1,
+                        y: y - 1
+                    }
+                ]
+            }if(x === 7){
+                return [
+                    {
+                        x: x - 1,
+                        y: y - 1
+                    }
+                ]
+            }else{
+                return [
+                    {
+                        x: x -1,
+                        y: y - 1
+                    },
+                    {
+                        x: x + 1,
+                        y: y - 1
+                    }
+                ]
+            }   
         }
     }
 }
+
 
 //TOUR
 function Rook(player) {
@@ -340,7 +355,20 @@ function Rook(player) {
 
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
-
+Rook.prototype.whereCanMove = function(x, y){
+    if(this.player === Player.Black){
+        let array = [{}];
+        for(let i = 0; i < 7; i++){
+            if(i >= y){
+                array[i] = {
+                    x: x,
+                    y: y + 1 + 1*i
+                }
+            }
+        }
+        console.log(array);
+    }
+}
 //FOU
 function Bishop(player) {
     PieceRef.call(this, player);
