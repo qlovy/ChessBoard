@@ -47,7 +47,7 @@ function Board(config) {
         let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);//Math.floor arrondi à l'inférieure.
         let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
         currentPiece = me.pieces[x][y];
-        currentPiecePosition = {x: x, y: y};
+        currentPiecePosition = { x: x, y: y };
         let possibilityCurrentPiece = currentPiece.whereCanMove(x, y);
         let possibilityCurrentPieceEat = currentPiece.whereCanEat(x, y);//seulement pour le pion
         //reset l'affichage des possibilités de la pièce
@@ -55,19 +55,23 @@ function Board(config) {
         //dessin des possibilités si on a appuyé avec le click gauche
         if (e.which === 1) {
             for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                if(me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined){
-                    ctx.fillStyle = '#8e44ad';
-                    ctx.beginPath();
-                    ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
-                    ctx.fill();
+                if(possibilityCurrentPiece[i] !== undefined){
+                    if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined) {
+                        ctx.fillStyle = '#8e44ad';
+                        ctx.beginPath();
+                        ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                        ctx.fill();
+                    }
                 }
             }
             for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
-                if(me.pieces[possibilityCurrentPieceEat[i].x][possibilityCurrentPieceEat[i].y] !== undefined){
-                    ctx.fillStyle = '#16a085';
-                    ctx.beginPath();
-                    ctx.arc(possibilityCurrentPieceEat[i].x * this.dimension + 50 + Math.round(this.dimension/2), possibilityCurrentPieceEat[i].y * this.dimension + 50 + Math.round(this.dimension/2), 10, 0, 360);
-                    ctx.fill();
+                if(possibilityCurrentPieceEat[i] !== undefined){
+                    if (me.pieces[possibilityCurrentPieceEat[i].x][possibilityCurrentPieceEat[i].y] !== undefined) {
+                        ctx.fillStyle = '#16a085';
+                        ctx.beginPath();
+                        ctx.arc(possibilityCurrentPieceEat[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPieceEat[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                        ctx.fill();
+                    }
                 }
             }
         }
@@ -80,18 +84,24 @@ function Board(config) {
         let possibilityCurrentPieceEat = currentPiece.whereCanEat(currentPiecePosition.x, currentPiecePosition.y);//seulement pour le pion
         if (e.which === 1) {
             for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                if (x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y) {
-                    if(me.pieces[x][y] === undefined){
-                        me.pieces[x][y] = currentPiece;
-                        me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
-                    }
-                }
+                 if(possibilityCurrentPiece[i] !== undefined){
+                     if (x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y) {
+                         if (me.pieces[x][y] === undefined) {
+                             me.pieces[x][y] = currentPiece;
+                             me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
+                         }
+                     }
+                 }
             }
             for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
-                if(x === possibilityCurrentPieceEat[i].x && y === possibilityCurrentPieceEat[i].y){
-                    if(me.pieces[x][y] !== undefined){
-                        me.pieces[x][y] = currentPiece;
-                        me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
+                if(possibilityCurrentPieceEat[i] !== undefined){
+                    if (x === possibilityCurrentPieceEat[i].x && y === possibilityCurrentPieceEat[i].y) {
+                        if (me.pieces[x][y] !== undefined) {
+                            if(currentPiece.player !== me.pieces[x][y].player){
+                                me.pieces[x][y] = currentPiece;
+                                me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
+                            }
+                        }
                     }
                 }
             }
@@ -143,7 +153,7 @@ Board.prototype.draw = function () {
         ctx.fillText(8 - x, this.x - 25, this.y + 42 + x * this.dimension);
     }
     //ajout des pièces de manière automatique
-    if(atStart === true){//s'exécute seulement au départ
+    if (atStart === true) {//s'exécute seulement au départ
         for (let x = 0; x < nbCase; x++) {
             for (let y = 0; y < nbCase; y++) {
                 if (y === 0) {
@@ -240,7 +250,7 @@ Pawn.prototype.constructor = Pawn;
 //gère les endroits où peut aller le pion
 Pawn.prototype.whereCanMove = function (x, y) {
     if (this.player === Player.Black) {
-        if(y !== 7){
+        if (y !== 7) {
             if (y === 1) {
                 return [
                     {
@@ -260,9 +270,9 @@ Pawn.prototype.whereCanMove = function (x, y) {
                     }
                 ]
             }
-        }    
+        }
     } else {
-        if(y !== 0){
+        if (y !== 0) {
             if (y === 6) {
                 return [
                     {
@@ -285,56 +295,56 @@ Pawn.prototype.whereCanMove = function (x, y) {
         }
     }
 }
-Pawn.prototype.whereCanEat = function(x, y){
-    if(this.player === Player.Black){
-        if(y !== 7){
-            if(x === 0) {
+Pawn.prototype.whereCanEat = function (x, y) {
+    if (this.player === Player.Black) {
+        if (y !== 7) {
+            if (x === 0) {
                 return [
                     {
                         x: x + 1,
                         y: y + 1
                     }
                 ]
-            }if(x === 7){
+            } if (x === 7) {
                 return [
                     {
                         x: x - 1,
                         y: y + 1
                     }
                 ]
-            }else{
+            } else {
                 return [
                     {
                         x: x - 1,
                         y: y + 1
                     },
                     {
-                    x: x + 1,
-                    y: y + 1
-                }
-            ]
+                        x: x + 1,
+                        y: y + 1
+                    }
+                ]
             }
         }
-    }else{
-        if(y !== 0){
-            if(x === 0) {
+    } else {
+        if (y !== 0) {
+            if (x === 0) {
                 return [
                     {
                         x: x + 1,
                         y: y - 1
                     }
                 ]
-            }if(x === 7){
+            } if (x === 7) {
                 return [
                     {
                         x: x - 1,
                         y: y - 1
                     }
                 ]
-            }else{
+            } else {
                 return [
                     {
-                        x: x -1,
+                        x: x - 1,
                         y: y - 1
                     },
                     {
@@ -342,7 +352,7 @@ Pawn.prototype.whereCanEat = function(x, y){
                         y: y - 1
                     }
                 ]
-            }   
+            }
         }
     }
 }
@@ -355,20 +365,73 @@ function Rook(player) {
 
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
-Rook.prototype.whereCanMove = function(x, y){
-    if(this.player === Player.Black){
-        let array = [{}];
-        for(let i = 0; i < 7; i++){
-            if(i >= y){
-                array[i] = {
-                    x: x,
-                    y: y + 1 + 1*i
+Rook.prototype.whereCanMove = function (x, y) {
+    if (this.player === Player.Black) {
+        let array = [];
+        for (let i = 0; i < 7; i++) {
+            //les déplacements
+            
+            //vers l'avant
+            if (y !== 7) {
+                let calc = y + 1 + 1*i;
+                if(calc < 8){
+                    array[i] = {
+                        x: x,
+                        y: y + 1 + 1 * i
+                    }
+                }
+            }
+            //vers la droite
+            if (x !== 7) {
+                let calc = x + 1 + 1*i;
+                if(calc < 8){
+                    array[i + 7] = {
+                        x: x + 1 + 1 * i,
+                        y: y
+                    }
+                }
+            }
+            //vers l'arrière
+            if (y !== 0) {
+                let calc = y -1 -1*i;
+                if(calc > -1){
+                    array[i + 14] = {
+                        x: x,
+                        y: y - 1 - 1 * i
+                    }
+                }
+            }
+            //vers la gauche
+            if (x !== 0) {
+                let calc = x - 1 -1 *i;
+                if(calc > -1){
+                    array[i + 21] = {
+                        x: x - 1 - 1 * i,
+                        y: y
+                    }
                 }
             }
         }
-        console.log(array);
+        return array;
+    } else {
+        let array = [{}];
+        for (let i = 0; i < 7; i++) {
+            if (i <= y) {
+                if (y !== 0) {
+                    array[i] = {
+                        x: x,
+                        y: y - 1 - 1 * i
+                    }
+                }
+            }
+        }
+        return array;
     }
 }
+Rook.prototype.whereCanEat = function (x, y) {
+    return this.whereCanMove(x, y);
+}
+
 //FOU
 function Bishop(player) {
     PieceRef.call(this, player);
