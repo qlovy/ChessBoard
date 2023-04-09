@@ -22,7 +22,6 @@ let atStart = true;
 function cordinateToAlgebric(x, y) {
     return String.fromCharCode(x + 97) + (8 - y);
 }
-
 function algebricToCordinate(algebric) {
     let charX = algebric.substr(0, 1);
     let charY = algebric.substr(1, 1);
@@ -32,6 +31,30 @@ function algebricToCordinate(algebric) {
     };
 }
 
+function goTopCalc(y, i) {
+    let a = y - 1 - 1 * i;
+    if(a > -1){
+        return a;
+    }
+}
+function goDownCalc(y, i) {
+    let a = y + 1 + 1 * i;
+    if(a < 8){
+        return a;
+    }
+}
+function goLeftCalc(x, i) {
+    let a = x - 1 - 1 * i;
+    if(a > -1){
+        return a;
+    }
+}
+function goRightClac(x, i) {
+    let a = x + 1 + 1 * i;
+    if(a < 8){
+        return a;
+    }
+}
 /*BOARD*/
 
 function Board(config) {
@@ -55,7 +78,7 @@ function Board(config) {
         //dessin des possibilités si on a appuyé avec le click gauche
         if (e.which === 1) {
             for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                if(possibilityCurrentPiece[i] !== undefined){
+                if (possibilityCurrentPiece[i].x !== undefined && possibilityCurrentPiece[i].y !== undefined) {
                     if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined) {
                         ctx.fillStyle = '#8e44ad';
                         ctx.beginPath();
@@ -65,7 +88,7 @@ function Board(config) {
                 }
             }
             for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
-                if(possibilityCurrentPieceEat[i] !== undefined){
+                if (possibilityCurrentPieceEat[i].x !== undefined && possibilityCurrentPieceEat[i].y !== undefined) {
                     if (me.pieces[possibilityCurrentPieceEat[i].x][possibilityCurrentPieceEat[i].y] !== undefined) {
                         ctx.fillStyle = '#16a085';
                         ctx.beginPath();
@@ -84,20 +107,20 @@ function Board(config) {
         let possibilityCurrentPieceEat = currentPiece.whereCanEat(currentPiecePosition.x, currentPiecePosition.y);//seulement pour le pion
         if (e.which === 1) {
             for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                 if(possibilityCurrentPiece[i] !== undefined){
-                     if (x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y) {
-                         if (me.pieces[x][y] === undefined) {
-                             me.pieces[x][y] = currentPiece;
-                             me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
-                         }
-                     }
-                 }
+                if (possibilityCurrentPiece[i].x !== undefined && possibilityCurrentPiece[i].y !== undefined) {
+                    if (x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y) {
+                        if (me.pieces[x][y] === undefined) {
+                            me.pieces[x][y] = currentPiece;
+                            me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
+                        }
+                    }
+                }
             }
             for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
-                if(possibilityCurrentPieceEat[i] !== undefined){
+                if (possibilityCurrentPieceEat[i].x !== undefined && possibilityCurrentPieceEat[i].y !== undefined) {
                     if (x === possibilityCurrentPieceEat[i].x && y === possibilityCurrentPieceEat[i].y) {
                         if (me.pieces[x][y] !== undefined) {
-                            if(currentPiece.player !== me.pieces[x][y].player){
+                            if (currentPiece.player !== me.pieces[x][y].player) {
                                 me.pieces[x][y] = currentPiece;
                                 me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
                             }
@@ -366,67 +389,40 @@ function Rook(player) {
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (x, y) {
-    if (this.player === Player.Black) {
-        let array = [];
-        for (let i = 0; i < 7; i++) {
-            //les déplacements
-            
-            //vers l'avant
-            if (y !== 7) {
-                let calc = y + 1 + 1*i;
-                if(calc < 8){
-                    array[i] = {
-                        x: x,
-                        y: y + 1 + 1 * i
-                    }
+    let array = [];
+    for (let i = 0; i < 8; i++) {
+        //les déplacements
+
+        //vers le bas
+        if (y !== 7) {
+                array[i] = {
+                    x: x,
+                    y: goDownCalc(y, i)
                 }
-            }
-            //vers la droite
-            if (x !== 7) {
-                let calc = x + 1 + 1*i;
-                if(calc < 8){
-                    array[i + 7] = {
-                        x: x + 1 + 1 * i,
-                        y: y
-                    }
-                }
-            }
-            //vers l'arrière
-            if (y !== 0) {
-                let calc = y -1 -1*i;
-                if(calc > -1){
-                    array[i + 14] = {
-                        x: x,
-                        y: y - 1 - 1 * i
-                    }
-                }
-            }
-            //vers la gauche
-            if (x !== 0) {
-                let calc = x - 1 -1 *i;
-                if(calc > -1){
-                    array[i + 21] = {
-                        x: x - 1 - 1 * i,
-                        y: y
-                    }
-                }
-            }
         }
-        return array;
-    } else {
-        let array = [{}];
-        for (let i = 0; i < 7; i++) {
-            if (i <= y) {
-                if (y !== 0) {
-                    array[i] = {
-                        x: x,
-                        y: y - 1 - 1 * i
-                    }
+        //vers la droite
+        if (x !== 7) {
+                array[i + 8] = {
+                    x: goRightClac(x, i),
+                    y: y
                 }
-            }
         }
-        return array;
+        //vers le haut
+        if (y !== 0) {
+                array[i + 18] = {
+                    x: x,
+                    y: goTopCalc(y, i)
+                }
+        }
+        //vers la gauche
+        if (x !== 0) {
+                array[i + 24] = {
+                    x: goLeftCalc(x, i),
+                    y: y
+                }
+        }
     }
+    return array;
 }
 Rook.prototype.whereCanEat = function (x, y) {
     return this.whereCanMove(x, y);
@@ -439,6 +435,45 @@ function Bishop(player) {
 
 Bishop.prototype = Object.create(PieceRef.prototype);
 Bishop.prototype.constructor = Bishop;
+Bishop.prototype.whereCanMove = function (x, y) {
+    let array = [];
+    for (let i = 0; i < 7; i++) {
+        if (y !== 7) {
+            //bas gauche
+            if (x !== 0) {
+                if (goDownCalc(y, i) < 8 && goLeftCalc(x, i) > -1) {
+                    array = [
+                        {
+                            x: goLeftCalc(x, i),
+                            y: goDownCalc(x, i)
+                        }
+                    ]
+                }
+            }
+            //bas droite
+            if (x !== 7) {
+                if(goDownCalc(y, i) < 8 && goRightCalc(x, i) > -1){
+                    array = [
+                        {
+                            x: goRightCalc(x, i),
+                            y: goDownCalc(y, i)
+                        }
+                    ]
+                }
+            }
+        }
+        if(y !== 0){
+            //haut gauche
+            if(x !== 0){
+
+            }
+            //haut droite
+        }
+    }
+}
+Bishop.prototype.whereCanEat = function(x, y){
+    return this.whereCanMove(x, y);
+}
 
 //CHEVAL
 function Knight(player) {
