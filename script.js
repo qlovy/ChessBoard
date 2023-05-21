@@ -65,70 +65,83 @@ function Board(config) {
     this.color1 = config.color1 || 'rgb(205, 97, 51)';
     this.color2 = config.color2 || 'rgb(192, 190, 190)';
     this.pieces = [[], [], [], [], [], [], [], []];
+
+    //événement qui gère quand on appuie sur le bouton de la souris
     canvas.addEventListener('mousedown', (e) => {
-        let rect = canvas.getBoundingClientRect();
+        
+        let rect = canvas.getBoundingClientRect();//les dimensions du canevas
         let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);//Math.floor arrondi à l'inférieure.
         let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
-        currentPiece = me.pieces[x][y];
+        currentPiece = me.pieces[x][y];//la pièce séléctionnée par le joueur
         currentPiecePosition = { x: x, y: y };
         let possibilityCurrentPiece = currentPiece.whereCanMove(x, y);
-        let possibilityCurrentPieceEat = currentPiece.whereCanEat(x, y);//seulement pour le pion
+        let possibilityCurrentPieceEat = currentPiece.whereCanEat(x, y);//seulement pour le pion   
+        
         //reset l'affichage des possibilités de la pièce
         TheBoard.draw();
-        //dessin des possibilités si on a appuyé avec le click gauche
+        
+        //dessin des possibilités si on a appuyé avec le clique gauche
         if (e.which === 1) {
-            for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                if (possibilityCurrentPiece[i].x !== undefined && possibilityCurrentPiece[i].y !== undefined) {
-                    if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined) {
+            if(1 ===1){//on éxecute ci-dessous si c'est un pion.
+                //montre les possibilités de déplacement de la pièce
+                for (let i = 0; i < possibilityCurrentPiece.length; i++) {
+                    if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits libres.
                         ctx.fillStyle = '#8e44ad';
                         ctx.beginPath();
                         ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
                         ctx.fill();
                     }
                 }
-            }
-            for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
-                if (possibilityCurrentPieceEat[i].x !== undefined && possibilityCurrentPieceEat[i].y !== undefined) {
-                    if (me.pieces[possibilityCurrentPieceEat[i].x][possibilityCurrentPieceEat[i].y] !== undefined) {
-                        ctx.fillStyle = '#16a085';
-                        ctx.beginPath();
-                        ctx.arc(possibilityCurrentPieceEat[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPieceEat[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
-                        ctx.fill();
+                //montre les possibilités de la pièce pour manger. Les possibilités de mouvement et de mangeaille sont les mêmes pour toutes les pièces sauf le pion.
+                for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
+                    if (me.pieces[possibilityCurrentPieceEat[i].x][possibilityCurrentPieceEat[i].y] !== undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits occupés.                        
+                        if (currentPiece.player !== me.pieces[possibilityCurrentPieceEat[i].x][possibilityCurrentPieceEat[i].y].player) {//on ne se mange pas entre pièce de la même couleur.
+                            ctx.fillStyle = '#16a085';
+                            ctx.beginPath();
+                            ctx.arc(possibilityCurrentPieceEat[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPieceEat[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                            ctx.fill();
+                        }
+                        
                     }
                 }
             }
         }
     });
+
+    //événement qui gère quand on relâche le bouton de la souris
     canvas.addEventListener('mouseup', (e) => {
         let rect = canvas.getBoundingClientRect();
         let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);
         let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
         let possibilityCurrentPiece = currentPiece.whereCanMove(currentPiecePosition.x, currentPiecePosition.y);
         let possibilityCurrentPieceEat = currentPiece.whereCanEat(currentPiecePosition.x, currentPiecePosition.y);//seulement pour le pion
+        
+        //déplacement de la pièce
         if (e.which === 1) {
-            for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                if (possibilityCurrentPiece[i].x !== undefined && possibilityCurrentPiece[i].y !== undefined) {
-                    if (x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y) {
-                        if (me.pieces[x][y] === undefined) {
+            if (1 === 1) {
+                //déplacement de la pièce sans manger
+                for (let i = 0; i < possibilityCurrentPiece.length; i++) {
+                    if (x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y) {//les cordonnées de la souris doivent correspondre aux mouvement de la pièces.
+                        if (me.pieces[x][y] === undefined) {//on doit cliquer sur une place libre. 
                             me.pieces[x][y] = currentPiece;
                             me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
                         }
                     }
                 }
-            }
-            for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
-                if (possibilityCurrentPieceEat[i].x !== undefined && possibilityCurrentPieceEat[i].y !== undefined) {
+                //déplacement avec manger
+                for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
                     if (x === possibilityCurrentPieceEat[i].x && y === possibilityCurrentPieceEat[i].y) {
-                        if (me.pieces[x][y] !== undefined) {
+                        if (me.pieces[x][y] !== undefined) {//on doit manger qqlch.
                             if (currentPiece.player !== me.pieces[x][y].player) {
                                 me.pieces[x][y] = currentPiece;
                                 me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
                             }
                         }
                     }
-                }
-            }
+                }    
+            }else{}           
         }
+        //dessin des pièces sur l'échiquier
         TheBoard.draw();
     });
 }
@@ -264,6 +277,7 @@ PieceRef.prototype.draw = function (x, y) {
 function Pawn(player) {
     PieceRef.call(this, player);
     //la fonction call() permet d'avoir les mêmes attributs que le PieceRef. Plus info: https://developer.mozilla.org/fr/docs/Learn/JavaScript/Objects/Classes_in_JavaScript
+    this.ID = "pawn";
 }
 
 Pawn.prototype = Object.create(PieceRef.prototype);
@@ -389,40 +403,29 @@ function Rook(player) {
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (x, y) {
-    let array = [];
-    for (let i = 0; i < 8; i++) {
-        //les déplacements
-
-        //vers le bas
-        if (y !== 7) {
-                array[i] = {
-                    x: x,
-                    y: goDownCalc(y, i)
+    if(this.player === Player.Black){
+        //déplacement verticaux
+        let arrayX = Array();
+        for(let i = 0;i < 15 ;i++){
+            class Cordonnee {
+                constructor(x, y) {
+                    this.x = x,
+                        this.y = y;
                 }
-        }
-        //vers la droite
-        if (x !== 7) {
-                array[i + 8] = {
-                    x: goRightClac(x, i),
-                    y: y
-                }
-        }
-        //vers le haut
-        if (y !== 0) {
-                array[i + 18] = {
-                    x: x,
-                    y: goTopCalc(y, i)
-                }
-        }
-        //vers la gauche
-        if (x !== 0) {
-                array[i + 24] = {
-                    x: goLeftCalc(x, i),
-                    y: y
-                }
-        }
+            }
+            arrayX.push(new Cordonnee(x - 7 + 1*i,y));
+        };
+        //déplacement horizontaux
+        let arrayY = Array();
+        for(let i = 0; i < 15; i++){
+            let Cordonnee = function(x,y){
+                this.x = x,
+                this.y = y
+            }
+            arrayY.push(new Cordonnee(x, y - 7 + 1*i));
+        };
+        return arrayX && arrayY;//on renvoie les deux tableaux contenants 
     }
-    return array;
 }
 Rook.prototype.whereCanEat = function (x, y) {
     return this.whereCanMove(x, y);
@@ -435,42 +438,7 @@ function Bishop(player) {
 
 Bishop.prototype = Object.create(PieceRef.prototype);
 Bishop.prototype.constructor = Bishop;
-Bishop.prototype.whereCanMove = function (x, y) {
-    let array = [];
-    for (let i = 0; i < 7; i++) {
-        if (y !== 7) {
-            //bas gauche
-            if (x !== 0) {
-                if (goDownCalc(y, i) < 8 && goLeftCalc(x, i) > -1) {
-                    array = [
-                        {
-                            x: goLeftCalc(x, i),
-                            y: goDownCalc(x, i)
-                        }
-                    ]
-                }
-            }
-            //bas droite
-            if (x !== 7) {
-                if(goDownCalc(y, i) < 8 && goRightCalc(x, i) > -1){
-                    array = [
-                        {
-                            x: goRightCalc(x, i),
-                            y: goDownCalc(y, i)
-                        }
-                    ]
-                }
-            }
-        }
-        if(y !== 0){
-            //haut gauche
-            if(x !== 0){
-
-            }
-            //haut droite
-        }
-    }
-}
+Bishop.prototype.whereCanEat = function(){}
 Bishop.prototype.whereCanEat = function(x, y){
     return this.whereCanMove(x, y);
 }
