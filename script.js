@@ -69,7 +69,7 @@ function Board(config) {
     //événement qui gère quand on appuie sur le bouton de la souris
     canvas.addEventListener('mousedown', (e) => {
         
-        let rect = canvas.getBoundingClientRect();//les dimensions du canevas
+        let rect = canvas.getBoundingClientRect();//les cordonnées de placement du canvas
         let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);//Math.floor arrondi à l'inférieure.
         let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
         currentPiece = me.pieces[x][y];//la pièce séléctionnée par le joueur
@@ -82,7 +82,7 @@ function Board(config) {
         
         //dessin des possibilités si on a appuyé avec le clique gauche
         if (e.which === 1) {
-            if(1 ===1){//on éxecute ci-dessous si c'est un pion.
+            if(currentPiece.ID === "pawn"){//on éxecute ci-dessous si c'est un pion.
                 //montre les possibilités de déplacement de la pièce
                 for (let i = 0; i < possibilityCurrentPiece.length; i++) {
                     if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits libres.
@@ -92,7 +92,7 @@ function Board(config) {
                         ctx.fill();
                     }
                 }
-                //montre les possibilités de la pièce pour manger. Les possibilités de mouvement et de mangeaille sont les mêmes pour toutes les pièces sauf le pion.
+                    //montre les possibilités de la pièce pour manger. Les possibilités de mouvement et de mangeaille sont les mêmes pour toutes les pièces sauf le pion.
                 for (let i = 0; i < possibilityCurrentPieceEat.length; i++) {
                     if (me.pieces[possibilityCurrentPieceEat[i].x][possibilityCurrentPieceEat[i].y] !== undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits occupés.                        
                         if (currentPiece.player !== me.pieces[possibilityCurrentPieceEat[i].x][possibilityCurrentPieceEat[i].y].player) {//on ne se mange pas entre pièce de la même couleur.
@@ -102,6 +102,36 @@ function Board(config) {
                             ctx.fill();
                         }
                         
+                    }
+                }
+            }else{//pour toutes les autres pièces
+                console.log(possibilityCurrentPiece);
+                for (let i = 0; i < possibilityCurrentPiece.length; i++) {
+                    if(x === 0){                     
+                        if(possibilityCurrentPiece[i].x >= 0 && possibilityCurrentPiece[i].y >= 0){
+                            let iStop = 40;
+                            if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits libres.
+                                ctx.fillStyle = '#8e44ad';
+                                ctx.beginPath();
+                                ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                                ctx.fill();
+                            }else{
+                                if(iStop > i){
+                                    iStop = i;
+                                    console.log(iStop);
+                                }
+                            }
+                            //else{
+                            //    if(possibilityCurrentPiece[i].x === x && possibilityCurrentPiece[i].y === y){}
+                            //    
+                            //    ctx.fillStyle = '#16a085';
+                            //    ctx.beginPath();
+                            //    ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                            //    ctx.fill();
+                            //}
+                                
+                            
+                        }
                     }
                 }
             }
@@ -118,7 +148,7 @@ function Board(config) {
         
         //déplacement de la pièce
         if (e.which === 1) {
-            if (1 === 1) {
+            if (currentPiece.ID === "pawn") {
                 //déplacement de la pièce sans manger
                 for (let i = 0; i < possibilityCurrentPiece.length; i++) {
                     if (x === possibilityCurrentPiece[i].x && y === possibilityCurrentPiece[i].y) {//les cordonnées de la souris doivent correspondre aux mouvement de la pièces.
@@ -405,7 +435,7 @@ Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (x, y) {
     if(this.player === Player.Black){
         //déplacement verticaux
-        let arrayX = Array();
+        let array = Array();
         for(let i = 0;i < 15 ;i++){
             class Cordonnee {
                 constructor(x, y) {
@@ -413,18 +443,19 @@ Rook.prototype.whereCanMove = function (x, y) {
                         this.y = y;
                 }
             }
-            arrayX.push(new Cordonnee(x - 7 + 1*i,y));
+            array.push(new Cordonnee(x - 7 + 1*i,y));
         };
         //déplacement horizontaux
-        let arrayY = Array();
         for(let i = 0; i < 15; i++){
-            let Cordonnee = function(x,y){
-                this.x = x,
-                this.y = y
+            class Cordonnee {
+                constructor(x, y) {
+                    this.x = x,
+                        this.y = y;
+                }
             }
-            arrayY.push(new Cordonnee(x, y - 7 + 1*i));
+            array.push(new Cordonnee(x, y - 7 + 1*i));
         };
-        return arrayX && arrayY;//on renvoie les deux tableaux contenants 
+        return array;//on renvoie le tableau contenant les cordonnées de déplacement.
     }
 }
 Rook.prototype.whereCanEat = function (x, y) {
