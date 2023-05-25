@@ -17,6 +17,7 @@ const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 let currentPiece;
 let currentPiecePosition;
 let atStart = true;
+let iStop = [];
 
 /*Les fonctions générales*/
 function cordinateToAlgebric(x, y) {
@@ -105,21 +106,19 @@ function Board(config) {
                     }
                 }
             }else{//pour toutes les autres pièces
-                console.log(possibilityCurrentPiece);
                 for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                    if(x === 0){                     
+                    if(x === 0){   
                         if(possibilityCurrentPiece[i].x >= 0 && possibilityCurrentPiece[i].y >= 0){
-                            let iStop = 40;
                             if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits libres.
-                                ctx.fillStyle = '#8e44ad';
-                                ctx.beginPath();
-                                ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
-                                ctx.fill();
-                            }else{
-                                if(iStop > i){
-                                    iStop = i;
-                                    console.log(iStop);
+                                if(i < iStop[0]){
+                                    ctx.fillStyle = '#8e44ad';
+                                    ctx.beginPath();
+                                    ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                                    ctx.fill();
                                 }
+                            }
+                            if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined && me.pieces[possibilityCurrentPiece[i - 1].x][possibilityCurrentPiece[i - 1].y] !== undefined) {
+                                iStop.push(i);
                             }
                             //else{
                             //    if(possibilityCurrentPiece[i].x === x && possibilityCurrentPiece[i].y === y){}
@@ -135,6 +134,7 @@ function Board(config) {
                     }
                 }
             }
+            iStop.length = 0;
         }
     });
 
