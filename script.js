@@ -19,6 +19,12 @@ let currentPiecePosition;
 let atStart = true;
 let iStop = [];
 let iDontWork;
+class Cordonnee {
+    constructor(x, y) {
+        this.x = x,
+            this.y = y;
+    }
+};
 
 /*Les fonctions générales*/
 function cordinateToAlgebric(x, y) {
@@ -107,17 +113,19 @@ function Board(config) {
                     }
                 }
             }else{//pour toutes les autres pièces
-                for(let j = 0;j < 7;j++){
+                for(let j = 0;j < 8;j++){
                     for (let i = 0; i < possibilityCurrentPiece.length; i++) {
-                        if(x === j){//si la tour est sur la colonne a
-                            if(possibilityCurrentPiece[i].x >= 0 && possibilityCurrentPiece[i].y >= 0){//les cordonnées doivent être plus grande que zéro
+                        if(x === j){//si la tour est sur la colonne a.
+                            if(possibilityCurrentPiece[i].x >= 0 && possibilityCurrentPiece[i].y >= 0 && possibilityCurrentPiece[i].x <= 7 && possibilityCurrentPiece[i].y <= 7){//les cordonnées doivent être plus grande que zéro
                                 if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] === undefined && i === iDontWork + 1) {//
                                     iStop.push(i);
                                 }
                                 if (me.pieces[possibilityCurrentPiece[i].x][possibilityCurrentPiece[i].y] !== undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits occupés.
                                     iDontWork = i;
                                 }else{
-                                    if(i <= iStop[0] + 1) {//les point de déplacement s'arrêtent devant une pièce
+                                    console.log(iStop);
+                                    console.log(possibilityCurrentPiece);
+                                    if(i <= iStop[0] + 2) {//les point de déplacement s'arrêtent devant une pièce
                                         ctx.fillStyle = '#8e44ad';
                                         ctx.beginPath();
                                         ctx.arc(possibilityCurrentPiece[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPiece[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
@@ -137,7 +145,7 @@ function Board(config) {
                     }
                 }
             }
-            iStop.length = 0;
+            iStop = [];
         }
     });
 
@@ -172,7 +180,7 @@ function Board(config) {
                         }
                     }
                 }    
-            }else{}           
+            }           
         }
         //dessin des pièces sur l'échiquier
         TheBoard.draw();
@@ -436,30 +444,16 @@ function Rook(player) {
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (x, y) {
-    if(this.player === Player.Black){
-        //déplacement verticaux
-        let array = Array();
-        for(let i = 0;i < 15 ;i++){
-            class Cordonnee {
-                constructor(x, y) {
-                    this.x = x,
-                        this.y = y;
-                }
-            }
-            array.push(new Cordonnee(x - 7 + 1*i,y));
-        };
-        //déplacement horizontaux
-        for(let i = 0; i < 15; i++){
-            class Cordonnee {
-                constructor(x, y) {
-                    this.x = x,
-                        this.y = y;
-                }
-            }
-            array.push(new Cordonnee(x, y - 7 + 1*i));
-        };
-        return array;//on renvoie le tableau contenant les cordonnées de déplacement.
-    }
+    //déplacement verticaux
+    let array = Array();
+    for(let i = 0;i < 15 ;i++){
+        array.push(new Cordonnee(x - 7 + 1*i,y));
+    };
+    //déplacement horizontaux
+    for(let i = 0; i < 15; i++){
+        array.push(new Cordonnee(x, y - 7 + 1*i));
+    };
+    return array;//on renvoie le tableau contenant les cordonnées de déplacement.
 }
 Rook.prototype.whereCanEat = function (x, y) {
     return this.whereCanMove(x, y);
