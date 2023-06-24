@@ -143,7 +143,11 @@ function Board(config) {
                     if (wherePiecesCanMoveY[i] >= 0 && wherePiecesCanMoveY[i] <= 7) {
                         if (me.pieces[x][wherePiecesCanMoveY[i]] !== undefined) {
                             if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
-                                iStopY.push(i);
+                                if(currentPiece.player === Player.Black){
+                                    iStopY.push(i);
+                                }else{
+                                    iStopY.push(wherePiecesCanMoveY.length - 1 - i);
+                                } 
                             }
                         }
                         yDontWork = iStopY[0];
@@ -159,8 +163,8 @@ function Board(config) {
                                 ctx.beginPath();
                                 ctx.arc(wherePiecesCanMoveX[i] * this.dimension + 50 + Math.round(this.dimension / 2), y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
                                 ctx.fill();
-                            }
-                        }
+                           }
+                       }
                     }
                 }
                 //dessin des points de déplacements en y (même fonctionnement que les points de déplacements en x)
@@ -176,6 +180,8 @@ function Board(config) {
                         }
                     }
                 }
+                console.log(yDontWork);
+                console.log(wherePiecesCanMoveY);
             }
             iStopX = [];
             iStopY = [];
