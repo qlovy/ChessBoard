@@ -131,7 +131,9 @@ function Board(config) {
                 for (let i = 0; i < wherePiecesCanMoveX.length; i++) {
                     if (wherePiecesCanMoveX[i] >= 0 && wherePiecesCanMoveX[i] <= 7) {//les mouvement de la pièce doivent rester dans l'échiquier.
                         if (me.pieces[wherePiecesCanMoveX[i]][y] !== undefined) {//détecte un obstacle (soit une pièce).
-                            iStopX.push(i);
+                            if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
+                                iStopX.push(i);
+                            }
                         }
                         xDontWork = iStopX[0];
                     }
@@ -475,7 +477,7 @@ function Rook(player) {
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (a) {
-    if (a === "x") {//
+    if (a === "x") {
         //déplacements horizontaux, x
         let array = Array();
         for (let i = 0; i < 15; i++) {
