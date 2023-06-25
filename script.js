@@ -68,7 +68,7 @@ function goRightClac(x, i) {
         return a;
     }
 }
-function CreateFalseArray(){
+function createFalseArray(){
     let array = [[], [], [], [], [], [], [], []];
     for(let i = 0; i < 8;i++){
         for (let j = 0; j < 8; j++) {
@@ -76,6 +76,9 @@ function CreateFalseArray(){
         }
     }
     return array;
+}
+function isIn(x, y){
+    return x >= 0 && x <= 7 && y >= 0 && y <= 7;//renvoie false ou true
 }
 
 /*
@@ -99,11 +102,8 @@ function Board(config) {
         let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
         currentPiece = me.pieces[x][y];//la pièce séléctionnée par le joueur
         currentPiecePosition = { x: x, y: y };//Ses cordonnées sur l'échiquier
-        //Pour le pion
-        let possibilityCurrentPawnMove = currentPiece.whereCanMove(x, y);
-        let possibilityCurrentPawnEat = currentPiece.whereCanEat(x, y);
-        //Pour les autres pièces
-        let wherePiecesCanMove = currentPiece.whereCanMove(x, y);
+        let whereCanMove = currentPiece.whereCanMove(x, y);
+        let whereCanEat = currentPiece.whereCanEat(x, y);
 
         //reset l'affichage des possibilités de la pièce
         TheBoard.draw();
@@ -112,27 +112,27 @@ function Board(config) {
         if (e.which === 1) {
             if (currentPiece.ID === "pawn") {//Pour le pion
                 //montre les possibilités de déplacement
-                for (let i = 0; i < possibilityCurrentPawnMove.length; i++) {
-                    if (me.pieces[possibilityCurrentPawnMove[i].x][possibilityCurrentPawnMove[i].y] === undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits libres.
+                for (let i = 0; i < whereCanMove.length; i++) {
+                    if (me.pieces[whereCanMove[i].x][whereCanMove[i].y] === undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits libres.
                         ctx.fillStyle = '#8e44ad';
                         ctx.beginPath();
-                        ctx.arc(possibilityCurrentPawnMove[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPawnMove[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                        ctx.arc(whereCanMove[i].x * this.dimension + 50 + Math.round(this.dimension / 2), whereCanMove[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
                         ctx.fill();
                     }
                 }
                 //montre les possibilités pour manger.
-                for (let i = 0; i < possibilityCurrentPawnEat.length; i++) {
-                    if (me.pieces[possibilityCurrentPawnEat[i].x][possibilityCurrentPawnEat[i].y] !== undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits occupés.                        
-                        if (currentPiece.player !== me.pieces[possibilityCurrentPawnEat[i].x][possibilityCurrentPawnEat[i].y].player) {//on ne se mange pas entre pièce de la même couleur.
+                for (let i = 0; i < whereCanEat.length; i++) {
+                    if (me.pieces[whereCanEat[i].x][whereCanEat[i].y] !== undefined) {//vérifie que les possibilités de déplacement correspondent à des endroits occupés.                        
+                        if (currentPiece.player !== me.pieces[whereCanEat[i].x][whereCanEat[i].y].player) {//on ne se mange pas entre pièce de la même couleur.
                             ctx.fillStyle = '#16a085';
                             ctx.beginPath();
-                            ctx.arc(possibilityCurrentPawnEat[i].x * this.dimension + 50 + Math.round(this.dimension / 2), possibilityCurrentPawnEat[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                            ctx.arc(whereCanEat[i].x * this.dimension + 50 + Math.round(this.dimension / 2), whereCanEat[i].y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
                             ctx.fill();
                         }
                     }
                 }
             } else {//Pour les autres pièces
-                console.log(wherePiecesCanMove);
+                console.log(whereCanMove);
                 
                 
                 
@@ -200,15 +200,15 @@ function Board(config) {
         let rect = canvas.getBoundingClientRect();
         let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);
         let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
-        let possibilityCurrentPawnMove = currentPiece.whereCanMove(currentPiecePosition.x, currentPiecePosition.y);
-        let possibilityCurrentPawnEat = currentPiece.whereCanEat(currentPiecePosition.x, currentPiecePosition.y);//seulement pour le pion
+        let whereCanMove = currentPiece.whereCanMove(currentPiecePosition.x, currentPiecePosition.y);
+        let whereCanEat = currentPiece.whereCanEat(currentPiecePosition.x, currentPiecePosition.y);//seulement pour le pion
 
         //déplacement de la pièce
         if (e.which === 1) {
             if (currentPiece.ID === "pawn") {
                 //déplacement de la pièce sans manger
-                for (let i = 0; i < possibilityCurrentPawnMove.length; i++) {
-                    if (x === possibilityCurrentPawnMove[i].x && y === possibilityCurrentPawnMove[i].y) {//les cordonnées de la souris doivent correspondre aux mouvement de la pièces.
+                for (let i = 0; i < whereCanMove.length; i++) {
+                    if (x === whereCanMove[i].x && y === whereCanMove[i].y) {//les cordonnées de la souris doivent correspondre aux mouvement de la pièces.
                         if (me.pieces[x][y] === undefined) {//on doit cliquer sur une place libre. 
                             me.pieces[x][y] = currentPiece;
                             me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
@@ -216,8 +216,8 @@ function Board(config) {
                     }
                 }
                 //déplacement avec manger
-                for (let i = 0; i < possibilityCurrentPawnEat.length; i++) {
-                    if (x === possibilityCurrentPawnEat[i].x && y === possibilityCurrentPawnEat[i].y) {
+                for (let i = 0; i < whereCanEat.length; i++) {
+                    if (x === whereCanEat[i].x && y === whereCanEat[i].y) {
                         if (me.pieces[x][y] !== undefined) {//on doit manger qqlch.
                             if (currentPiece.player !== me.pieces[x][y].player) {
                                 me.pieces[x][y] = currentPiece;
@@ -335,7 +335,6 @@ Board.prototype.draw = function () {
         }
     }
 }
-
 
 /*Les pièces*/
 
@@ -490,47 +489,31 @@ function Rook(player) {
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (x, y) {
-    let array = CreateFalseArray();
-    for (let i = 0; i < array.length; i++) { 
-        if(x <= 7 && IsIgnore1 !== true){
-            if(x === 7){
-                IsIgnore1 = true;
-            }else{
-                x = x + 1;
-            }
-            array[x][y] = true;
-        }
-        if(x >= 0 && IsIgnore2 !== true){
-            if(x === 0){
-                IsIgnore2 = true;
-            }else{
-                x = x - 1;
-            }
-            array[x][y] = true;
-        }
-        
-        if(y <= 7 && IsIgnore3 !== true){
-            if(y === 7){
-                IsIgnore3 = true;
-            }else{
-                y = y + 1;
-            }
-            array[x][y] = true;
-        }
-        if(y >= 0 && IsIgnore4 !== true){
-            if(y === 0){
-                IsIgnore4 = true;
-            }else{
-                y = y - 1;
-            }
-            array[x][y] = true;
-        }
-    };
-    console.log(array);
+    let array = createFalseArray();
+    let moveX = x + 1;
+    while (isIn(moveX, y)) {
+        array[moveX][y] = true;
+        moveX++;
+    }
+    moveX = x - 1;
+    while (isIn(moveX, y)) {
+        array[moveX][y] = true;
+        moveX--;
+    }
+    let moveY = y + 1;
+    while (isIn(x, moveY)) {
+        array[x][moveY] = true;
+        moveY++;
+    }
+    moveY = y - 1;
+    while (isIn(x, moveY)) {
+        array[x][moveY] = true;
+        moveY--;
+    }
     return array;//on renvoie le tableau contenant les cordonnées de déplacement.
 };
-Rook.prototype.whereCanEat = function (a) {
-    return this.whereCanMove(a);
+Rook.prototype.whereCanEat = function (x, y) {
+    return this.whereCanMove(x, y);
 };
 
 //FOU
