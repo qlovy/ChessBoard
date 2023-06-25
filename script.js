@@ -71,6 +71,15 @@ function goRightClac(x, i) {
         return a;
     }
 }
+function CreateFalseArray(){
+    let array = [[], [], [], [], [], [], [], []];
+    for(let i = 0; i < 8;i++){
+        for (let j = 0; j < 8; j++) {
+            array[j][i] = false;
+        }
+    }
+    return array;
+}
 
 /*
 BOARD
@@ -97,8 +106,7 @@ function Board(config) {
         let possibilityCurrentPawnMove = currentPiece.whereCanMove(x, y);
         let possibilityCurrentPawnEat = currentPiece.whereCanEat(x, y);
         //Pour les autres pièces
-        let wherePiecesCanMoveX = currentPiece.whereCanMove(x);
-        let wherePiecesCanMoveY = currentPiece.whereCanMove(y);
+        let wherePiecesCanMove = currentPiece.whereCanMove(x, y);
 
         //reset l'affichage des possibilités de la pièce
         TheBoard.draw();
@@ -127,61 +135,65 @@ function Board(config) {
                     }
                 }
             } else {//Pour les autres pièces
-                //triage x
-                for (let i = 0; i < wherePiecesCanMoveX.length; i++) {
-                    if (wherePiecesCanMoveX[i] >= 0 && wherePiecesCanMoveX[i] <= 7) {//les mouvement de la pièce doivent rester dans l'échiquier.
-                        if (me.pieces[wherePiecesCanMoveX[i]][y] !== undefined) {//détecte un obstacle (soit une pièce).
-                            if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
-                                iStopX.push(i);
-                            }
-                        }
-                        xDontWork = iStopX[0];
-                    }
-                }
-                //triage y (même fonctionnement que le triage x)
-                for (let i = 0; i < wherePiecesCanMoveY.length; i++) {
-                    if (wherePiecesCanMoveY[i] >= 0 && wherePiecesCanMoveY[i] <= 7) {
-                        if (me.pieces[x][wherePiecesCanMoveY[i]] !== undefined) {
-                            if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
-                                if(currentPiece.player === Player.Black){
-                                    iStopY.push(i);
-                                }else{
-                                    iStopY.push(wherePiecesCanMoveY.length - 1 - i);
-                                } 
-                            }
-                        }
-                        yDontWork = iStopY[0];
-                    }
-                }
-                //dessin des points de déplacements en x
-                for (let i = 0; i < wherePiecesCanMoveX.length; i++) {
-                    if (wherePiecesCanMoveX[i] >= 0 && wherePiecesCanMoveX[i] <= 7) {
-                        if (me.pieces[wherePiecesCanMoveX[i]][y] !== currentPiece) {//évite que la pièce se déplace sur elle-même.
-                            if (i < xDontWork) {//on dessine jusqu'à la pièce qu y bloque.
-                                //dessine un cercle
-                                ctx.fillStyle = '#8e44ad';
-                                ctx.beginPath();
-                                ctx.arc(wherePiecesCanMoveX[i] * this.dimension + 50 + Math.round(this.dimension / 2), y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
-                                ctx.fill();
-                           }
-                       }
-                    }
-                }
-                //dessin des points de déplacements en y (même fonctionnement que les points de déplacements en x)
-                for (let i = 0; i < wherePiecesCanMoveY.length; i++) {
-                    if (wherePiecesCanMoveY[i] >= 0 && wherePiecesCanMoveY[i] <= 7) {
-                        if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
-                            if (i < yDontWork) {
-                                ctx.fillStyle = '#8e44ad';
-                                ctx.beginPath();
-                                ctx.arc(x * this.dimension + 50 + Math.round(this.dimension / 2), wherePiecesCanMoveY[i] * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
-                                ctx.fill();
-                            }
-                        }
-                    }
-                }
-                console.log(yDontWork);
-                console.log(wherePiecesCanMoveY);
+                console.log(wherePiecesCanMove);
+                
+                
+                
+                
+                
+                ////triage x
+                //for (let i = 0; i < wherePiecesCanMoveX.length; i++) {
+                //    if (wherePiecesCanMoveX[i] >= 0 && wherePiecesCanMoveX[i] <= 7) {//les mouvement de la pièce doivent rester dans l'échiquier.
+                //        if (me.pieces[wherePiecesCanMoveX[i]][y] !== undefined) {//détecte un obstacle (soit une pièce).
+                //            if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
+                //                iStopX.push(i);
+                //            }
+                //        }
+                //        xDontWork = iStopX[0];
+                //    }
+                //}
+                ////triage y (même fonctionnement que le triage x)
+                //for (let i = 0; i < wherePiecesCanMoveY.length; i++) {
+                //    if (wherePiecesCanMoveY[i] >= 0 && wherePiecesCanMoveY[i] <= 7) {
+                //        if (me.pieces[x][wherePiecesCanMoveY[i]] !== undefined) {
+                //            if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
+                //                if(currentPiece.player === Player.Black){
+                //                    iStopY.push(i);
+                //                }else{
+                //                    iStopY.push(wherePiecesCanMoveY.length - 1 - i);
+                //                } 
+                //            }
+                //        }
+                //        yDontWork = iStopY[0];
+                //    }
+                //}
+                ////dessin des points de déplacements en x
+                //for (let i = 0; i < wherePiecesCanMoveX.length; i++) {
+                //    if (wherePiecesCanMoveX[i] >= 0 && wherePiecesCanMoveX[i] <= 7) {
+                //        if (me.pieces[wherePiecesCanMoveX[i]][y] !== currentPiece) {//évite que la pièce se déplace sur elle-même.
+                //            if (i < xDontWork) {//on dessine jusqu'à la pièce qu y bloque.
+                //                //dessine un cercle
+                //                ctx.fillStyle = '#8e44ad';
+                //                ctx.beginPath();
+                //                ctx.arc(wherePiecesCanMoveX[i] * this.dimension + 50 + Math.round(this.dimension / 2), y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                //                ctx.fill();
+                //           }
+                //       }
+                //    }
+                //}
+                ////dessin des points de déplacements en y (même fonctionnement que les points de déplacements en x)
+                //for (let i = 0; i < wherePiecesCanMoveY.length; i++) {
+                //    if (wherePiecesCanMoveY[i] >= 0 && wherePiecesCanMoveY[i] <= 7) {
+                //        if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
+                //            if (i < yDontWork) {
+                //                ctx.fillStyle = '#8e44ad';
+                //                ctx.beginPath();
+                //                ctx.arc(x * this.dimension + 50 + Math.round(this.dimension / 2), wherePiecesCanMoveY[i] * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                //                ctx.fill();
+                //            }
+                //        }
+                //    }
+                //}
             }
             iStopX = [];
             iStopY = [];
@@ -482,22 +494,28 @@ function Rook(player) {
 
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
-Rook.prototype.whereCanMove = function (a) {
-    if (a === "x") {
-        //déplacements horizontaux, x
-        let array = Array();
-        for (let i = 0; i < 15; i++) {
-            array.push(a - 7 + 1 * i);
-        };
-        return array;//on renvoie le tableau contenant les cordonnées de déplacement.
-    } else {
-        //déplacements verticaux, y
-        let array = Array();
-        for (let i = 0; i < 15; i++) {
-            array.push(a - 7 + 1 * i);
-        };
-        return array;//on renvoie le tableau contenant les cordonnées de déplacement.
-    }
+Rook.prototype.whereCanMove = function (x, y) {
+    let array = CreateFalseArray();
+    for (let i = 0; i < array.length; i++) { 
+        x1 = x + 1 * i;
+        if(x1 <= 7){
+            array[y][x1] = true;    
+        }
+        x2 = x - 1 * i;
+        if(x2 >= 0){
+            array[y][x2] = true;
+        }
+        y1 = y + 1 * i;
+        if(y1 <= 7){
+            array[y1][x] = true;
+        }
+        y2 = y - 1 * i;
+        if(y2 >= 0){
+            array[y2][x] = true;
+        }
+    };
+    console.log(array);
+    return array;//on renvoie le tableau contenant les cordonnées de déplacement.
 };
 Rook.prototype.whereCanEat = function (a) {
     return this.whereCanMove(a);
