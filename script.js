@@ -25,12 +25,6 @@ let iStopX = [];
 let iStopY = [];
 let xDontWork;
 let yDontWork;
-class Cordonnee {
-    constructor(x, y) {
-        this.x = x,
-            this.y = y;
-    }
-};
 
 /*
 GENERALS FUNCTIONS
