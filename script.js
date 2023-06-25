@@ -25,7 +25,10 @@ let iStopX = [];
 let iStopY = [];
 let xDontWork;
 let yDontWork;
-
+let IsIgnore1 = false;
+let IsIgnore2 = false;
+let IsIgnore3 = false;
+let IsIgnore4 = false;
 /*
 GENERALS FUNCTIONS
 */
@@ -130,8 +133,6 @@ function Board(config) {
                 }
             } else {//Pour les autres pièces
                 console.log(wherePiecesCanMove);
-                
-                
                 
                 
                 
@@ -425,7 +426,7 @@ Pawn.prototype.whereCanEat = function (x, y) {
                 return [
                     {
                         x: x + 1,
-                        y: y + 1
+                            y: y + 1
                     }
                 ]
             } if (x === 7) {
@@ -491,21 +492,38 @@ Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (x, y) {
     let array = CreateFalseArray();
     for (let i = 0; i < array.length; i++) { 
-        x1 = x + 1 * i;
-        if(x1 <= 7){
-            array[y][x1] = true;    
+        if(x <= 7 && IsIgnore1 !== true){
+            if(x === 7){
+                IsIgnore1 = true;
+            }else{
+                x = x + 1;
+            }
+            array[x][y] = true;
         }
-        x2 = x - 1 * i;
-        if(x2 >= 0){
-            array[y][x2] = true;
+        if(x >= 0 && IsIgnore2 !== true){
+            if(x === 0){
+                IsIgnore2 = true;
+            }else{
+                x = x - 1;
+            }
+            array[x][y] = true;
         }
-        y1 = y + 1 * i;
-        if(y1 <= 7){
-            array[y1][x] = true;
+        
+        if(y <= 7 && IsIgnore3 !== true){
+            if(y === 7){
+                IsIgnore3 = true;
+            }else{
+                y = y + 1;
+            }
+            array[x][y] = true;
         }
-        y2 = y - 1 * i;
-        if(y2 >= 0){
-            array[y2][x] = true;
+        if(y >= 0 && IsIgnore4 !== true){
+            if(y === 0){
+                IsIgnore4 = true;
+            }else{
+                y = y - 1;
+            }
+            array[x][y] = true;
         }
     };
     console.log(array);
