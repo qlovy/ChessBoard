@@ -77,9 +77,6 @@ function createFalseArray(){
     }
     return array;
 }
-function isIn(x, y){
-    return x >= 0 && x <= 7 && y >= 0 && y <= 7;//renvoie false ou true
-}
 
 /*
 BOARD
@@ -325,6 +322,10 @@ Board.prototype.draw = function () {
         atStart = false;
     }
 
+    Board.prototype.canImoveHere = function(x, y){
+        return this.pieces[x][y] === undefined
+    }
+
     //integration des pièces dans le tableau qui représente les cases
     for (let x = 0; x < this.pieces.length; x++) {//première dimension (lignes)
         for (let y = 0; y < this.pieces[x].length; y++) {//deuxième dimension (colonnes)
@@ -490,27 +491,22 @@ Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (x, y) {
     let array = createFalseArray();
-    let moveX = x + 1;
-    while (isIn(moveX, y)) {
-        array[moveX][y] = true;
-        moveX++;
+    let state = 0;
+    while(state <= 1){
+        for (let i = 0; i < 8; i++) {
+            if(state === 0 && TheBoard.canImoveHere(i*1, y) === true){
+                array[i*1][y] = true;
+            }else if(TheBoard.canImoveHere(i*1, y) !== true){
+                break;
+            }else if(state === 1 && TheBoard.canImoveHere(x, i*1) === true){
+                array[x][i*1] = true;
+            }else if(TheBoard.canImoveHere(x, i*1) !== true){
+                break;
+            }
+        }
+        state++;
     }
-    moveX = x - 1;
-    while (isIn(moveX, y)) {
-        array[moveX][y] = true;
-        moveX--;
-    }
-    let moveY = y + 1;
-    while (isIn(x, moveY)) {
-        array[x][moveY] = true;
-        moveY++;
-    }
-    moveY = y - 1;
-    while (isIn(x, moveY)) {
-        array[x][moveY] = true;
-        moveY--;
-    }
-    return array;//on renvoie le tableau contenant les cordonnées de déplacement.
+    return array;//on renvoie le tableau contenant les cordonnées de déplacement.(x puis y)
 };
 Rook.prototype.whereCanEat = function (x, y) {
     return this.whereCanMove(x, y);
