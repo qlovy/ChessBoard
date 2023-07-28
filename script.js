@@ -129,73 +129,22 @@ function Board(config) {
                     }
                 }
             } else {//Pour les autres pièces
-                console.log(whereCanMove);
                 for (let i = 0; i < whereCanMove.length; i++) {
                     for (let j = 0; j < whereCanMove.length; j++) {
-                        if (whereCanMove[i][j] === true) {
+                        if (whereCanMove[i][j] === true) {//Si les cordonnées donnent sur un endroit ok
                             ctx.fillStyle = '#8e44ad';
                             ctx.beginPath();
                             ctx.arc(i * this.dimension + 50 + Math.round(this.dimension / 2), j * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
                             ctx.fill();
                         }
+                        if(whereCanEat[i][j] === true){
+                            ctx.fillStyle = '#16a085';
+                            ctx.beginPath();
+                            ctx.arc(i * this.dimension + 50 + Math.round(this.dimension / 2), j * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                            ctx.fill();
+                        }    
                     }
                 }
-
-
-
-                ////triage x
-                //for (let i = 0; i < wherePiecesCanMoveX.length; i++) {
-                //    if (wherePiecesCanMoveX[i] >= 0 && wherePiecesCanMoveX[i] <= 7) {//les mouvement de la pièce doivent rester dans l'échiquier.
-                //        if (me.pieces[wherePiecesCanMoveX[i]][y] !== undefined) {//détecte un obstacle (soit une pièce).
-                //            if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
-                //                iStopX.push(i);
-                //            }
-                //        }
-                //        xDontWork = iStopX[0];
-                //    }
-                //}
-                ////triage y (même fonctionnement que le triage x)
-                //for (let i = 0; i < wherePiecesCanMoveY.length; i++) {
-                //    if (wherePiecesCanMoveY[i] >= 0 && wherePiecesCanMoveY[i] <= 7) {
-                //        if (me.pieces[x][wherePiecesCanMoveY[i]] !== undefined) {
-                //            if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
-                //                if(currentPiece.player === Player.Black){
-                //                    iStopY.push(i);
-                //                }else{
-                //                    iStopY.push(wherePiecesCanMoveY.length - 1 - i);
-                //                } 
-                //            }
-                //        }
-                //        yDontWork = iStopY[0];
-                //    }
-                //}
-                ////dessin des points de déplacements en x
-                //for (let i = 0; i < wherePiecesCanMoveX.length; i++) {
-                //    if (wherePiecesCanMoveX[i] >= 0 && wherePiecesCanMoveX[i] <= 7) {
-                //        if (me.pieces[wherePiecesCanMoveX[i]][y] !== currentPiece) {//évite que la pièce se déplace sur elle-même.
-                //            if (i < xDontWork) {//on dessine jusqu'à la pièce qu y bloque.
-                //                //dessine un cercle
-                //                ctx.fillStyle = '#8e44ad';
-                //                ctx.beginPath();
-                //                ctx.arc(wherePiecesCanMoveX[i] * this.dimension + 50 + Math.round(this.dimension / 2), y * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
-                //                ctx.fill();
-                //           }
-                //       }
-                //    }
-                //}
-                ////dessin des points de déplacements en y (même fonctionnement que les points de déplacements en x)
-                //for (let i = 0; i < wherePiecesCanMoveY.length; i++) {
-                //    if (wherePiecesCanMoveY[i] >= 0 && wherePiecesCanMoveY[i] <= 7) {
-                //        if (me.pieces[x][wherePiecesCanMoveY[i]] !== currentPiece) {
-                //            if (i < yDontWork) {
-                //                ctx.fillStyle = '#8e44ad';
-                //                ctx.beginPath();
-                //                ctx.arc(x * this.dimension + 50 + Math.round(this.dimension / 2), wherePiecesCanMoveY[i] * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
-                //                ctx.fill();
-                //            }
-                //        }
-                //    }
-                //}
             }
             iStopX = [];
             iStopY = [];
@@ -211,11 +160,11 @@ function Board(config) {
         let whereCanEat = currentPiece.whereCanEat(currentPiecePosition.x, currentPiecePosition.y);//seulement pour le pion
 
         //déplacement de la pièce
-        if (e.which === 1) {
+        if (e.which === 1) {//Si le clique gauche est relaché
             if (currentPiece.ID === "pawn") {
                 //déplacement de la pièce sans manger
                 for (let i = 0; i < whereCanMove.length; i++) {
-                    if (x === whereCanMove[i].x && y === whereCanMove[i].y) {//les cordonnées de la souris doivent correspondre aux mouvement de la pièces.
+                    if (x === whereCanMove[i].x && y === whereCanMove[i].y) {//les cordonnées de la souris doivent correspondre aux possibilitées de mouvements de la pièces.
                         if (me.pieces[x][y] === undefined) {//on doit cliquer sur une place libre. 
                             me.pieces[x][y] = currentPiece;
                             me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
@@ -344,11 +293,23 @@ Board.prototype.draw = function () {
 }
 
 Board.prototype.canImoveHere = function (x, y) {
-    if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
-        return this.pieces[x][y] === undefined;
+    if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {//les cordonnées appartiennent à l'échiquier.
+        return this.pieces[x][y] === undefined;//l'endroit doit être libre.
     } else {
         return false;
     }
+}
+
+Board.prototype.canIeatMaybeHere = function(x, y){
+    if(x >= 0 && x <= 7 && y >= 0 && y <= 7){
+        return this.pieces[x][y] !== undefined;//l'endroit doit être occupé.
+    }else{
+        return false;
+    }
+}
+
+Board.prototype.canIeatHere = function(x, y, colorPiece){
+    return this.pieces[x][y].player !== colorPiece;
 }
 
 /*Les pièces*/
@@ -508,7 +469,7 @@ Rook.prototype.whereCanMove = function (x, y) {
     let state = 0;
     while (state <= 3) {
         let stop = false;
-        for (let i = 1; i < 8; i++) {
+        for (let i = 1; i < array.length; i++) {
             //vers la droite
             if (state === 0 && stop === false) {
                 if (TheBoard.canImoveHere(x + i * 1, y) === true) {
@@ -544,10 +505,55 @@ Rook.prototype.whereCanMove = function (x, y) {
         }
         state++;
     }
-    return array;//on renvoie le tableau contenant les cordonnées de déplacement.(x puis y)
+    return array;//on renvoie le tableau contenant l'état de la case de déplacement (true or false).(x puis y)
 };
 Rook.prototype.whereCanEat = function (x, y) {
-    return this.whereCanMove(x, y);
+    let eatArray = createFalseArray();
+    let state = 0;
+    while (state <= 3) {
+        let stop = false;
+        for (let i = 1; i < eatArray.length; i++) {
+            //vers la droite
+            if (state === 0 && stop === false) {
+                if (TheBoard.canIeatMaybeHere(x + i * 1, y) === true) {
+                    stop = true;
+                    if(TheBoard.canIeatHere(x + i * 1, y, this.player) === true){
+                        eatArray[x + i*1][y] = true;  
+                    }
+                }
+            }
+            //vers la gauche
+            if (state === 1 && stop === false) {
+                if (TheBoard.canIeatMaybeHere(x - i * 1, y) === true) {
+                    stop = true;
+                    if(TheBoard.canIeatHere(x - i*1, y, this.player) === true){
+                        eatArray[x - i*1][y] = true;
+                    }
+                }
+            }
+            //vers le bas
+            if (state === 2 && stop === false) {
+                if (TheBoard.canIeatMaybeHere(x, y + i * 1) === true) {
+                    stop = true;
+                    if(TheBoard.canIeatHere(x, y + i*1, this.player) === true){
+                        eatArray[x][y + i*1] = true;
+                    }
+                }
+            }
+            //vers le haut
+            if (state === 3 && stop === false) {
+                if (TheBoard.canIeatMaybeHere(x, y - i * 1) === true) {
+                    stop = true;
+                    if(TheBoard.canIeatHere(x, y - i*1, this.player) === true){
+                        eatArray[x][y - i*1] = true;
+                    }
+                }
+            }
+        }
+        state++;
+    }
+    console.log(eatArray);
+    return eatArray;
 };
 
 //FOU
