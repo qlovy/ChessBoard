@@ -68,9 +68,9 @@ function goRightClac(x, i) {
         return a;
     }
 }
-function createFalseArray(){
+function createFalseArray() {
     let array = [[], [], [], [], [], [], [], []];
-    for(let i = 0; i < 8;i++){
+    for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             array[j][i] = false;
         }
@@ -130,9 +130,9 @@ function Board(config) {
                 }
             } else {//Pour les autres pièces
                 console.log(whereCanMove);
-                
-                
-                
+
+
+
                 ////triage x
                 //for (let i = 0; i < wherePiecesCanMoveX.length; i++) {
                 //    if (wherePiecesCanMoveX[i] >= 0 && wherePiecesCanMoveX[i] <= 7) {//les mouvement de la pièce doivent rester dans l'échiquier.
@@ -333,10 +333,10 @@ Board.prototype.draw = function () {
     }
 }
 
-Board.prototype.canImoveHere = function(x, y){
-    if(x >= 0 && x <= 7 && y >= 0 && y <= 7){
+Board.prototype.canImoveHere = function (x, y) {
+    if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
         return this.pieces[x][y] === undefined;
-    }else{
+    } else {
         return false;
     }
 }
@@ -430,7 +430,7 @@ Pawn.prototype.whereCanEat = function (x, y) {
                 return [
                     {
                         x: x + 1,
-                            y: y + 1
+                        y: y + 1
                     }
                 ]
             } if (x === 7) {
@@ -496,38 +496,38 @@ Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (x, y) {
     let array = createFalseArray();
     let state = 0;
-    while(state <= 3){
+    while (state <= 3) {
         let stop = false;
         for (let i = 1; i < 8; i++) {
             //vers la droite
-            if(state === 0 && stop === false){
-                if(TheBoard.canImoveHere(x + i*1, y) === true){
-                    array[x + i*1][y] = true;
-                }else{
+            if (state === 0 && stop === false) {
+                if (TheBoard.canImoveHere(x + i * 1, y) === true) {
+                    array[x + i * 1][y] = true;
+                } else {
                     stop = true;
                 }
             }
             //vers la gauche
-            if(state === 1 && stop === false){
-                if(TheBoard.canImoveHere(x - i*1, y) === true){
-                    array[x - i*1][y] = true;
-                }else{
+            if (state === 1 && stop === false) {
+                if (TheBoard.canImoveHere(x - i * 1, y) === true) {
+                    array[x - i * 1][y] = true;
+                } else {
                     stop = true;
                 }
             }
             //vers le bas
-            if(state === 2 && stop === false){
-                if(TheBoard.canImoveHere(x, y + i*1) === true){
-                    array[x][y + i*1] = true;
-                }else{
+            if (state === 2 && stop === false) {
+                if (TheBoard.canImoveHere(x, y + i * 1) === true) {
+                    array[x][y + i * 1] = true;
+                } else {
                     stop = true;
                 }
             }
             //vers le haut
-            if(state === 3 && stop === false){
-                if(TheBoard.canImoveHere(x, y - i*1) === true){
-                    array[x][y - i*1] = true;
-                }else{
+            if (state === 3 && stop === false) {
+                if (TheBoard.canImoveHere(x, y - i * 1) === true) {
+                    array[x][y - i * 1] = true;
+                } else {
                     stop = true;
                 }
             }
