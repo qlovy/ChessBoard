@@ -322,10 +322,6 @@ Board.prototype.draw = function () {
         atStart = false;
     }
 
-    Board.prototype.canImoveHere = function(x, y){
-        return this.pieces[x][y] === undefined
-    }
-
     //integration des pièces dans le tableau qui représente les cases
     for (let x = 0; x < this.pieces.length; x++) {//première dimension (lignes)
         for (let y = 0; y < this.pieces[x].length; y++) {//deuxième dimension (colonnes)
@@ -334,6 +330,14 @@ Board.prototype.draw = function () {
                 piece.draw(x * this.dimension + 50, y * this.dimension + 50);//dessin de la pièce en fonction de ses propriétés
             }
         }
+    }
+}
+
+Board.prototype.canImoveHere = function(x, y){
+    if(x >= 0 && x <= 7 && y >= 0 && y <= 7){
+        return this.pieces[x][y] === undefined;
+    }else{
+        return false;
     }
 }
 
@@ -492,16 +496,40 @@ Rook.prototype.constructor = Rook;
 Rook.prototype.whereCanMove = function (x, y) {
     let array = createFalseArray();
     let state = 0;
-    while(state <= 1){
-        for (let i = 0; i < 8; i++) {
-            if(state === 0 && TheBoard.canImoveHere(i*1, y) === true){
-                array[i*1][y] = true;
-            }else if(TheBoard.canImoveHere(i*1, y) !== true){
-                break;
-            }else if(state === 1 && TheBoard.canImoveHere(x, i*1) === true){
-                array[x][i*1] = true;
-            }else if(TheBoard.canImoveHere(x, i*1) !== true){
-                break;
+    while(state <= 3){
+        let stop = false;
+        for (let i = 1; i < 8; i++) {
+            //vers la droite
+            if(state === 0 && stop === false){
+                if(TheBoard.canImoveHere(x + i*1, y) === true){
+                    array[x + i*1][y] = true;
+                }else{
+                    stop = true;
+                }
+            }
+            //vers la gauche
+            if(state === 1 && stop === false){
+                if(TheBoard.canImoveHere(x - i*1, y) === true){
+                    array[x - i*1][y] = true;
+                }else{
+                    stop = true;
+                }
+            }
+            //vers le bas
+            if(state === 2 && stop === false){
+                if(TheBoard.canImoveHere(x, y + i*1) === true){
+                    array[x][y + i*1] = true;
+                }else{
+                    stop = true;
+                }
+            }
+            //vers le haut
+            if(state === 3 && stop === false){
+                if(TheBoard.canImoveHere(x, y - i*1) === true){
+                    array[x][y - i*1] = true;
+                }else{
+                    stop = true;
+                }
             }
         }
         state++;
