@@ -130,6 +130,16 @@ function Board(config) {
                 }
             } else {//Pour les autres pièces
                 console.log(whereCanMove);
+                for (let i = 0; i < whereCanMove.length; i++) {
+                    for(let j = 0; j < whereCanMove.length; j++){
+                        if(whereCanMove[i][j] === true){
+                            ctx.fillStyle = '#8e44ad';
+                            ctx.beginPath();
+                            ctx.arc(i * this.dimension + 50 + Math.round(this.dimension / 2), j * this.dimension + 50 + Math.round(this.dimension / 2), 10, 0, 360);
+                            ctx.fill();
+                        }
+                    } 
+                }
 
 
 
