@@ -83,12 +83,12 @@ BOARD
 */
 
 function Board(config) {
-    let me = this;
+    let me = this;//
     this.x = config.x;
     this.y = config.y;
-    this.dimension = config.dimension;
-    this.color1 = config.color1 || 'rgb(205, 97, 51)';
-    this.color2 = config.color2 || 'rgb(192, 190, 190)';
+    this.dimension = config.dimension;//la dimension des cases
+    this.color1 = config.color1 || 'rgb(205, 97, 51)';//couleur "blanc"
+    this.color2 = config.color2 || 'rgb(192, 190, 190)';//couleur "noir"
     this.pieces = [[], [], [], [], [], [], [], []];
 
     //événement qui gère quand on appuie sur le bouton de la souris
@@ -189,26 +189,32 @@ function Board(config) {
     });
 }
 
-Board.prototype.draw = function () {
+Board.prototype.draw = function () {//dessine l'échiquier avec les pièces
+    
+    //affichage centrage de l'échiquier par rapport au canvas
+    //ctx.fillStyle = '#000000';
+    //ctx.beginPath();
+    //ctx.rect(0, 0, width, height);
+    //ctx.fill();
 
     //Les cases et les cordonnées
 
     for (let x = 0; x < nbCase; x++) {
         if (x % 2 === 0) {//les colonnes paires
             for (let y = 0; y < nbCase; y++) {
-                //choix de la couleur en fonction de x
-                if (y % 2 === 0) {
-                    ctx.fillStyle = this.color2;
+                //choix de la couleur en fonction de y (ligne)
+                if (y % 2 === 0) {//(division sans reste)
+                    ctx.fillStyle = this.color2;//pour les lignes paires
                 } else {
-                    ctx.fillStyle = this.color1;
+                    ctx.fillStyle = this.color1;//pour les lignes impaires
                 }
+                //dessin du rectangle
                 ctx.beginPath();
                 ctx.rect(this.x + y * this.dimension, this.y + x * this.dimension, this.dimension, this.dimension);
                 ctx.fill();
             }
         } else {//les colonnes impaires
             for (let y = 0; y < nbCase; y++) {
-                //choix de la couleur en fonction de x
                 if (y % 2 === 0) {
                     ctx.fillStyle = this.color1;
                 } else {
@@ -217,11 +223,13 @@ Board.prototype.draw = function () {
                 ctx.beginPath();
                 ctx.rect(this.x + y * this.dimension, this.y + x * this.dimension, this.dimension, this.dimension);
                 ctx.fill();
+
                 //les lettres en lignes
                 if (y === 7 && x === 7) {
-                    for (let y = 0; y < nbCase; y++) {
+                    for (let i = 0; i < nbCase; i++) {
                         ctx.fillStyle = 'rgb(255, 255, 255)';
-                        ctx.fillText(letters[y], this.x + 32 + y * this.dimension, this.y + 25 + (x + 1) * this.dimension);
+                        ctx.fillText(letters[i], this.x + 32 + i * this.dimension, this.y + 25 + (x + 1) * this.dimension);
+                        //le 32 vient de this.dimension(75)/2 = 32,5 ==> 32 / le 25 vient de tatonement pour ajuster un bon placement des lettres.
                     }
                 }
             }
@@ -231,36 +239,36 @@ Board.prototype.draw = function () {
         ctx.font = '20px sans-serif';
         ctx.fillText(8 - x, this.x - 25, this.y + 42 + x * this.dimension);
     }
-    //ajout des pièces de manière automatique
+    //ajout des pièces
     if (atStart === true) {//s'exécute seulement au départ
         for (let x = 0; x < nbCase; x++) {
             for (let y = 0; y < nbCase; y++) {
-                if (y === 0) {
-                    if (x === 0 || x === 7) {
+                if (y === 0) {//la dernière rangée (pour les blancs), 8
+                    if (x === 0 || x === 7) {// en a8 et h8
                         this.pieces[x][y] = new Rook(Player.Black);
                     }
-                    if (x === 1 || x === 6) {
+                    if (x === 1 || x === 6) {// en b8 et g8
                         this.pieces[x][y] = new Knight(Player.Black);
                     }
-                    if (x === 2 || x === 5) {
+                    if (x === 2 || x === 5) {// en c8 et f8 
                         this.pieces[x][y] = new Bishop(Player.Black);
                     }
-                    if (x === 3) {
+                    if (x === 3) {// en d8
                         this.pieces[x][y] = new Queen(Player.Black);
                     }
-                    if (x === 4) {
+                    if (x === 4) {// en e8
                         this.pieces[x][y] = new King(Player.Black);
                     }
                 }
-                if (y === 1) {
+                if (y === 1) {//l'avant dernière rangée, 7
                     this.pieces[x][y] = new Pawn(Player.Black);
                 }
 
-                if (y === 6) {
+                if (y === 6) {//la deuxième rangée, 2
                     this.pieces[x][y] = new Pawn(Player.White);
                 }
-                if (y === 7) {
-                    if (x === 0 || x === 7) {
+                if (y === 7) {//la première rangée, 1
+                    if (x === 0 || x === 7) {// en a1 et h1, ...
                         this.pieces[x][y] = new Rook(Player.White);
                     }
                     if (x === 1 || x === 6) {
@@ -278,29 +286,29 @@ Board.prototype.draw = function () {
                 }
             }
         }
-        atStart = false;
+        atStart = false;//s'execute une seule fois
     }
 
     //integration des pièces dans le tableau qui représente les cases
-    for (let x = 0; x < this.pieces.length; x++) {//première dimension (lignes)
-        for (let y = 0; y < this.pieces[x].length; y++) {//deuxième dimension (colonnes)
+    for (let x = 0; x < this.pieces.length; x++) {//première dimension (lignes), axe x, a - h
+        for (let y = 0; y < this.pieces[x].length; y++) {//deuxième dimension (colonnes), axe y, 8 - 1
             let piece = this.pieces[x][y];
-            if (piece) {
+            if (piece) {//si ce n'est pas undefine
                 piece.draw(x * this.dimension + 50, y * this.dimension + 50);//dessin de la pièce en fonction de ses propriétés
             }
         }
     }
 }
 
-Board.prototype.canImoveHere = function (x, y) {
-    if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {//les cordonnées appartiennent à l'échiquier.
+Board.prototype.canImoveHere = function (x, y) {//détermine à l'aide de cordonnée si une pièce peut se déplacer
+    if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {//les cordonnées appartiennent à une case sur l'échiquier.
         return this.pieces[x][y] === undefined;//l'endroit doit être libre.
     } else {
         return false;
     }
 }
 
-Board.prototype.canIeatMaybeHere = function(x, y){
+Board.prototype.canIeatHere = function(x, y){//détermine si la pièce en rencontre une autre
     if(x >= 0 && x <= 7 && y >= 0 && y <= 7){
         return this.pieces[x][y] !== undefined;//l'endroit doit être occupé.
     }else{
@@ -308,8 +316,8 @@ Board.prototype.canIeatMaybeHere = function(x, y){
     }
 }
 
-Board.prototype.canIeatHere = function(x, y, colorPiece){
-    return this.pieces[x][y].player !== colorPiece;
+Board.prototype.colorRule = function(x, y, colorPiece){//détermine si la pièce rencontrée est mangeable en fonction de sa couleur.
+    return this.pieces[x][y].player !== colorPiece;//la couleur doit être différente.
 }
 
 /*Les pièces*/
@@ -464,7 +472,7 @@ function Rook(player) {
 
 Rook.prototype = Object.create(PieceRef.prototype);
 Rook.prototype.constructor = Rook;
-Rook.prototype.whereCanMove = function (x, y) {
+Rook.prototype.whereCanMove = function (x, y) {//créer un tableau qui dit les endroits où la pièce peut se déplacer.
     let array = createFalseArray();
     let state = 0;
     while (state <= 3) {
@@ -507,44 +515,44 @@ Rook.prototype.whereCanMove = function (x, y) {
     }
     return array;//on renvoie le tableau contenant l'état de la case de déplacement (true or false).(x puis y)
 };
-Rook.prototype.whereCanEat = function (x, y) {
+Rook.prototype.whereCanEat = function (x, y) {//créer un tableau qui dit les endroits où peut manger la pièce
     let eatArray = createFalseArray();
     let state = 0;
     while (state <= 3) {
         let stop = false;
         for (let i = 1; i < eatArray.length; i++) {
             //vers la droite
-            if (state === 0 && stop === false) {
-                if (TheBoard.canIeatMaybeHere(x + i * 1, y) === true) {
-                    stop = true;
-                    if(TheBoard.canIeatHere(x + i * 1, y, this.player) === true){
-                        eatArray[x + i*1][y] = true;  
+            if (state === 0 && stop === false) {//première direction
+                if (TheBoard.canIeatHere(x + i * 1, y) === true) {
+                    stop = true;//permet d'arrêter le cycle
+                    if(TheBoard.colorRule(x + i * 1, y, this.player) === true){//détermine si la pièce présente n'est pas de la même couleur que la pièce séléctionnée
+                        eatArray[x + i*1][y] = true;//on ajoute un "true" au tableau de "false"
                     }
                 }
             }
             //vers la gauche
             if (state === 1 && stop === false) {
-                if (TheBoard.canIeatMaybeHere(x - i * 1, y) === true) {
+                if (TheBoard.canIeatHere(x - i * 1, y) === true) {
                     stop = true;
-                    if(TheBoard.canIeatHere(x - i*1, y, this.player) === true){
+                    if(TheBoard.colorRule(x - i*1, y, this.player) === true){
                         eatArray[x - i*1][y] = true;
                     }
                 }
             }
             //vers le bas
             if (state === 2 && stop === false) {
-                if (TheBoard.canIeatMaybeHere(x, y + i * 1) === true) {
+                if (TheBoard.canIeatHere(x, y + i * 1) === true) {
                     stop = true;
-                    if(TheBoard.canIeatHere(x, y + i*1, this.player) === true){
+                    if(TheBoard.colorRule(x, y + i*1, this.player) === true){
                         eatArray[x][y + i*1] = true;
                     }
                 }
             }
             //vers le haut
             if (state === 3 && stop === false) {
-                if (TheBoard.canIeatMaybeHere(x, y - i * 1) === true) {
+                if (TheBoard.canIeatHere(x, y - i * 1) === true) {
                     stop = true;
-                    if(TheBoard.canIeatHere(x, y - i*1, this.player) === true){
+                    if(TheBoard.colorRule(x, y - i*1, this.player) === true){
                         eatArray[x][y - i*1] = true;
                     }
                 }
@@ -552,8 +560,7 @@ Rook.prototype.whereCanEat = function (x, y) {
         }
         state++;
     }
-    console.log(eatArray);
-    return eatArray;
+    return eatArray;//tableau de "true" ou "false" qui est dimenioné comme l'échiquier.
 };
 
 //FOU
@@ -563,7 +570,9 @@ function Bishop(player) {
 
 Bishop.prototype = Object.create(PieceRef.prototype);
 Bishop.prototype.constructor = Bishop;
-Bishop.prototype.whereCanEat = function () { }
+Bishop.prototype.whereCanMove = function () {
+
+}
 Bishop.prototype.whereCanEat = function (x, y) {
     return this.whereCanMove(x, y);
 }
