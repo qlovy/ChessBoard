@@ -334,10 +334,10 @@ function PieceRef(player) {
 //fonction qui la dessine
 PieceRef.prototype.draw = function (x, y) {
     let image = this.image;
-    if (image.complete) {
-        ctx.drawImage(image, x, y);
+    if (image.complete) {//vérifie que l'image est complète.
+        ctx.drawImage(image, x, y);//on la dessine.
     } else {
-        image.onload = function () {
+        image.onload = function () {//sinon on attend qu'elle le soit.
             ctx.drawImage(image, x, y);
         }
     }
