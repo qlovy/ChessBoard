@@ -29,6 +29,7 @@ let IsIgnore1 = false;
 let IsIgnore2 = false;
 let IsIgnore3 = false;
 let IsIgnore4 = false;
+
 /*
 GENERALS FUNCTIONS
 */
@@ -105,7 +106,7 @@ function Board(config) {
         //reset l'affichage des possibilités de la pièce
         TheBoard.draw();
 
-        //dessin des possibilités si on a appuyé avec le clique gauche
+        //dessin des possibilités si on a appuie avec le clique gauche
         if (e.which === 1) {
             if (currentPiece.ID === "pawn") {//Pour le pion
                 //montre les possibilités de déplacement
@@ -157,16 +158,16 @@ function Board(config) {
         let x = Math.floor((e.clientX - rect.left - 50) / this.dimension);
         let y = Math.floor((e.clientY - rect.top - 50) / this.dimension);
         let whereCanMove = currentPiece.whereCanMove(currentPiecePosition.x, currentPiecePosition.y);
-        let whereCanEat = currentPiece.whereCanEat(currentPiecePosition.x, currentPiecePosition.y);//seulement pour le pion
+        let whereCanEat = currentPiece.whereCanEat(currentPiecePosition.x, currentPiecePosition.y);
 
         //déplacement de la pièce
         if (e.which === 1) {//Si le clique gauche est relaché
             if (currentPiece.ID === "pawn") {
-                //déplacement de la pièce sans manger
+                //déplacement de du pion sans manger
                 for (let i = 0; i < whereCanMove.length; i++) {
-                    if (x === whereCanMove[i].x && y === whereCanMove[i].y) {//les cordonnées de la souris doivent correspondre aux possibilitées de mouvements de la pièces.
-                        if (me.pieces[x][y] === undefined) {//on doit cliquer sur une place libre. 
-                            me.pieces[x][y] = currentPiece;
+                    if (x === whereCanMove[i].x && y === whereCanMove[i].y) {//les cordonnées de la souris doivent correspondre aux possibilitées de mouvements de du pion.
+                        if (me.pieces[x][y] === undefined) {//on doit pointer sur une place libre. 
+                            me.pieces[x][y] = currentPiece;//on la replace dans le tableau
                             me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
                         }
                     }
@@ -180,6 +181,15 @@ function Board(config) {
                                 me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
                             }
                         }
+                    }
+                }
+            }else{
+                for (let i = 0; i < whereCanMove.length; i++) {
+                    for (let j = 0; j < whereCanMove.length; j++) {
+                        if ((whereCanMove[i][j] === true || whereCanEat[i][j] === true) && x === i && y === j) {
+                            me.pieces[x][y] = currentPiece;
+                            me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
+                        }   
                     }
                 }
             }
