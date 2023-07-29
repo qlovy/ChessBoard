@@ -489,11 +489,11 @@ Rook.prototype.whereCanMove = function (x, y) {//créer un tableau qui dit les e
         let stop = false;
         for (let i = 1; i < array.length; i++) {
             //vers la droite
-            if (state === 0 && stop === false) {
-                if (TheBoard.canImoveHere(x + i * 1, y) === true) {
-                    array[x + i * 1][y] = true;
+            if (state === 0 && stop === false) {//première direction
+                if (TheBoard.canImoveHere(x + i * 1, y) === true) {//si les cordonnées correspondent à un endroit libre
+                    array[x + i * 1][y] = true;//on l'ajoute au tableau
                 } else {
-                    stop = true;
+                    stop = true;//permet d'arrêter le cycle
                 }
             }
             //vers la gauche
@@ -532,9 +532,9 @@ Rook.prototype.whereCanEat = function (x, y) {//créer un tableau qui dit les en
         let stop = false;
         for (let i = 1; i < array.length; i++) {
             //vers la droite
-            if (state === 0 && stop === false) {//première direction
+            if (state === 0 && stop === false) {
                 if (TheBoard.canIeatHere(x + i * 1, y) === true) {
-                    stop = true;//permet d'arrêter le cycle
+                    stop = true;
                     if(TheBoard.colorRule(x + i * 1, y, this.player) === true){//détermine si la pièce présente n'est pas de la même couleur que la pièce séléctionnée
                         array[x + i*1][y] = true;//on ajoute un "true" au tableau de "false"
                     }
@@ -580,11 +580,92 @@ function Bishop(player) {
 
 Bishop.prototype = Object.create(PieceRef.prototype);
 Bishop.prototype.constructor = Bishop;
-Bishop.prototype.whereCanMove = function () {
-
+Bishop.prototype.whereCanMove = function (x, y) {
+    let array = createFalseArray();
+    let state = 0;
+    while (state <= 3) {
+        let stop = false;
+        for (let i = 1; i < array.length; i++) {
+            //le bas-droite
+            if (state === 0 && stop === false) {
+                if (TheBoard.canImoveHere(x + i * 1, y + i*1) === true) {
+                    array[x + i * 1][y + i*1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //le bas-gauche
+            if (state === 1 && stop === false) {
+                if (TheBoard.canImoveHere(x - i * 1, y + i*1) === true) {
+                    array[x - i * 1][y + i*1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //le haut-gauche
+            if (state === 3 && stop === false) {
+                if (TheBoard.canImoveHere(x - i*1, y - i * 1) === true) {
+                    array[x - i*1][y - i * 1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //le haut-droite
+            if (state === 2 && stop === false) {
+                if (TheBoard.canImoveHere(x + i*1, y - i * 1) === true) {
+                    array[x + i*1][y - i * 1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+        }
+        state++;
+    }
+    return array;//on renvoie le tableau contenant l'état de la case de déplacement (true or false).(x puis y)
 }
 Bishop.prototype.whereCanEat = function (x, y) {
-    return this.whereCanMove(x, y);
+    let array = createFalseArray();
+    let state = 0;
+    while (state <= 3) {
+        let stop = false;
+        for (let i = 1; i < array.length; i++) {
+            //le bas-droite
+            if (state === 0 && stop === false) {
+                if (TheBoard.canIeatHere(x - i * 1, y) === true) {
+                    stop = true;
+                    if(TheBoard.colorRule(x - i*1, y, this.player) === true){
+                        array[x - i*1][y] = true;
+                    }
+                }
+            }
+            //le bas-gauche
+            if (state === 1 && stop === false) {
+                if (TheBoard.canImoveHere(x - i * 1, y + i*1) === true) {
+                    array[x - i * 1][y + i*1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //le haut-gauche
+            if (state === 3 && stop === false) {
+                if (TheBoard.canImoveHere(x - i*1, y - i * 1) === true) {
+                    array[x - i*1][y - i * 1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //le haut-droite
+            if (state === 2 && stop === false) {
+                if (TheBoard.canImoveHere(x + i*1, y - i * 1) === true) {
+                    array[x + i*1][y - i * 1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+        }
+        state++;
+    }
+    return array;//on renvoie le tableau contenant l'état de la case de déplacement (true or false).(x puis y)
 }
 
 //CHEVAL
