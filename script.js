@@ -526,17 +526,17 @@ Rook.prototype.whereCanMove = function (x, y) {//créer un tableau qui dit les e
     return array;//on renvoie le tableau contenant l'état de la case de déplacement (true or false).(x puis y)
 };
 Rook.prototype.whereCanEat = function (x, y) {//créer un tableau qui dit les endroits où peut manger la pièce
-    let eatArray = createFalseArray();
+    let array = createFalseArray();
     let state = 0;
     while (state <= 3) {
         let stop = false;
-        for (let i = 1; i < eatArray.length; i++) {
+        for (let i = 1; i < array.length; i++) {
             //vers la droite
             if (state === 0 && stop === false) {//première direction
                 if (TheBoard.canIeatHere(x + i * 1, y) === true) {
                     stop = true;//permet d'arrêter le cycle
                     if(TheBoard.colorRule(x + i * 1, y, this.player) === true){//détermine si la pièce présente n'est pas de la même couleur que la pièce séléctionnée
-                        eatArray[x + i*1][y] = true;//on ajoute un "true" au tableau de "false"
+                        array[x + i*1][y] = true;//on ajoute un "true" au tableau de "false"
                     }
                 }
             }
@@ -545,7 +545,7 @@ Rook.prototype.whereCanEat = function (x, y) {//créer un tableau qui dit les en
                 if (TheBoard.canIeatHere(x - i * 1, y) === true) {
                     stop = true;
                     if(TheBoard.colorRule(x - i*1, y, this.player) === true){
-                        eatArray[x - i*1][y] = true;
+                        array[x - i*1][y] = true;
                     }
                 }
             }
@@ -554,7 +554,7 @@ Rook.prototype.whereCanEat = function (x, y) {//créer un tableau qui dit les en
                 if (TheBoard.canIeatHere(x, y + i * 1) === true) {
                     stop = true;
                     if(TheBoard.colorRule(x, y + i*1, this.player) === true){
-                        eatArray[x][y + i*1] = true;
+                        array[x][y + i*1] = true;
                     }
                 }
             }
@@ -563,14 +563,14 @@ Rook.prototype.whereCanEat = function (x, y) {//créer un tableau qui dit les en
                 if (TheBoard.canIeatHere(x, y - i * 1) === true) {
                     stop = true;
                     if(TheBoard.colorRule(x, y - i*1, this.player) === true){
-                        eatArray[x][y - i*1] = true;
+                        array[x][y - i*1] = true;
                     }
                 }
             }
         }
         state++;
     }
-    return eatArray;//tableau de "true" ou "false" qui est dimenioné comme l'échiquier.
+    return array;//tableau de "true" ou "false" qui est dimenioné comme l'échiquier.
 };
 
 //FOU
