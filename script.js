@@ -621,7 +621,7 @@ Bishop.prototype.whereCanMove = function (x, y) {
         }
         state++;
     }
-    return array;//on renvoie le tableau contenant l'état de la case de déplacement (true or false).(x puis y)
+    return array;
 }
 Bishop.prototype.whereCanEat = function (x, y) {
     let array = createFalseArray();
@@ -668,7 +668,7 @@ Bishop.prototype.whereCanEat = function (x, y) {
         }
         state++;
     }
-    return array;//on renvoie le tableau contenant l'état de la case de déplacement (true or false).(x puis y)
+    return array;
 }
 
 //CHEVAL
@@ -686,6 +686,164 @@ function Queen(player) {
 
 Queen.prototype = Object.create(PieceRef.prototype);
 Queen.prototype.constructor = Queen;
+Queen.prototype.whereCanMove = function(x, y) {
+    let array = createFalseArray();
+    let state = 0;
+    while (state <= 7) {
+        let stop = false;
+        for (let i = 1; i < array.length; i++) {
+            //vers la droite
+            if (state === 0 && stop === false) {
+                if (TheBoard.canImoveHere(x + i * 1, y) === true) {
+                    array[x + i * 1][y] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //vers la gauche
+            if (state === 1 && stop === false) {
+                if (TheBoard.canImoveHere(x - i * 1, y) === true) {
+                    array[x - i * 1][y] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //vers le bas
+            if (state === 2 && stop === false) {
+                if (TheBoard.canImoveHere(x, y + i * 1) === true) {
+                    array[x][y + i * 1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //vers le haut
+            if (state === 3 && stop === false) {
+                if (TheBoard.canImoveHere(x, y - i * 1) === true) {
+                    array[x][y - i * 1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //le bas-droite
+            if (state === 4 && stop === false) {
+                if (TheBoard.canImoveHere(x + i * 1, y + i*1) === true) {
+                    array[x + i * 1][y + i*1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //le bas-gauche
+            if (state === 5 && stop === false) {
+                if (TheBoard.canImoveHere(x - i * 1, y + i*1) === true) {
+                    array[x - i * 1][y + i*1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //le haut-gauche
+            if (state === 6 && stop === false) {
+                if (TheBoard.canImoveHere(x - i*1, y - i * 1) === true) {
+                    array[x - i*1][y - i * 1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+            //le haut-droite
+            if (state === 7 && stop === false) {
+                if (TheBoard.canImoveHere(x + i*1, y - i * 1) === true) {
+                    array[x + i*1][y - i * 1] = true;
+                } else {
+                    stop = true;
+                }
+            }
+        }
+        state++;
+    }
+    return array;
+}
+Queen.prototype.whereCanEat = function(x, y){
+    let array = createFalseArray();
+    let state = 0
+    while(state <= 7){
+        let stop = false;
+        for (let i = 1; i < array.length; i++) {
+            //vers la droite
+            if (state === 0 && stop === false) {
+                if (TheBoard.canIeatHere(x + i * 1, y) === true) {
+                    stop = true;
+                    if(TheBoard.colorRule(x + i * 1, y, this.player) === true){
+                        array[x + i*1][y] = true;
+                    }
+                }
+            }
+            //vers la gauche
+            if (state === 1 && stop === false) {
+                if (TheBoard.canIeatHere(x - i * 1, y) === true) {
+                    stop = true;
+                    if(TheBoard.colorRule(x - i*1, y, this.player) === true){
+                        array[x - i*1][y] = true;
+                    }
+                }
+            }
+            //vers le bas
+            if (state === 2 && stop === false) {
+                if (TheBoard.canIeatHere(x, y + i * 1) === true) {
+                    stop = true;
+                    if(TheBoard.colorRule(x, y + i*1, this.player) === true){
+                        array[x][y + i*1] = true;
+                    }
+                }
+            }
+            //vers le haut
+            if (state === 3 && stop === false) {
+                if (TheBoard.canIeatHere(x, y - i * 1) === true) {
+                    stop = true;
+                    if(TheBoard.colorRule(x, y - i*1, this.player) === true){
+                        array[x][y - i*1] = true;
+                    }
+                }
+            }
+            //le bas-droite
+            if (state === 4 && stop === false) {
+                if (TheBoard.canIeatHere(x + i * 1, y + i*1) === true) {
+                    stop = true;
+                    if(TheBoard.colorRule(x + i*1, y + i*1, this.player) === true){
+                        array[x + i*1][y + i*1] = true;
+                    }
+                }
+            }
+            //le bas-gauche
+            if (state === 5 && stop === false) {
+                if (TheBoard.canIeatHere(x - i * 1, y + i*1) === true) {
+                    stop = true;
+                    if(TheBoard.colorRule(x - i*1, y + i*1, this.player) === true){
+                        array[x - i*1][y + i*1] = true;
+                    }
+                }
+            }
+            //le haut-gauche
+            if (state === 6 && stop === false) {
+                if (TheBoard.canIeatHere(x - i * 1, y - i*1) === true) {
+                    stop = true;
+                    if(TheBoard.colorRule(x - i*1, y - i*1, this.player) === true){
+                        array[x - i*1][y - i*1] = true;
+                    }
+                }
+            }
+            //le haut-droite
+            if (state === 7 && stop === false) {
+                if (TheBoard.canIeatHere(x + i * 1, y - i*1) === true) {
+                    stop = true;
+                    if(TheBoard.colorRule(x + i*1, y - i*1, this.player) === true){
+                        array[x + i*1][y - i*1] = true;
+                    }
+                }
+            }
+        }
+        state++;
+    }
+    return array;
+}
 
 //ROI
 function King(player) {
