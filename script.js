@@ -631,35 +631,38 @@ Bishop.prototype.whereCanEat = function (x, y) {
         for (let i = 1; i < array.length; i++) {
             //le bas-droite
             if (state === 0 && stop === false) {
-                if (TheBoard.canIeatHere(x - i * 1, y) === true) {
+                if (TheBoard.canIeatHere(x + i * 1, y + i*1) === true) {
                     stop = true;
-                    if(TheBoard.colorRule(x - i*1, y, this.player) === true){
-                        array[x - i*1][y] = true;
+                    if(TheBoard.colorRule(x + i*1, y + i*1, this.player) === true){
+                        array[x + i*1][y + i*1] = true;
                     }
                 }
             }
             //le bas-gauche
             if (state === 1 && stop === false) {
-                if (TheBoard.canImoveHere(x - i * 1, y + i*1) === true) {
-                    array[x - i * 1][y + i*1] = true;
-                } else {
+                if (TheBoard.canIeatHere(x - i * 1, y + i*1) === true) {
                     stop = true;
+                    if(TheBoard.colorRule(x - i*1, y + i*1, this.player) === true){
+                        array[x - i*1][y + i*1] = true;
+                    }
                 }
             }
             //le haut-gauche
             if (state === 3 && stop === false) {
-                if (TheBoard.canImoveHere(x - i*1, y - i * 1) === true) {
-                    array[x - i*1][y - i * 1] = true;
-                } else {
+                if (TheBoard.canIeatHere(x - i * 1, y - i*1) === true) {
                     stop = true;
+                    if(TheBoard.colorRule(x - i*1, y - i*1, this.player) === true){
+                        array[x - i*1][y - i*1] = true;
+                    }
                 }
             }
             //le haut-droite
             if (state === 2 && stop === false) {
-                if (TheBoard.canImoveHere(x + i*1, y - i * 1) === true) {
-                    array[x + i*1][y - i * 1] = true;
-                } else {
+                if (TheBoard.canIeatHere(x + i * 1, y - i*1) === true) {
                     stop = true;
+                    if(TheBoard.colorRule(x + i*1, y - i*1, this.player) === true){
+                        array[x + i*1][y - i*1] = true;
+                    }
                 }
             }
         }
