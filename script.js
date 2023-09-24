@@ -3,7 +3,7 @@ CANVAS
 */
 
 const canvas = document.querySelector("#canvas");//cela nous permet de prendre toutes les informations nécessaires.
-const width = canvas.width = 700;
+const width = canvas.width = 1600;
 const height = canvas.height = 700;
 const ctx = canvas.getContext('2d');//l'environnement du canvas, ici en deux dimensions.
 
@@ -25,10 +25,8 @@ let iStopX = [];
 let iStopY = [];
 let xDontWork;
 let yDontWork;
-let IsIgnore1 = false;
-let IsIgnore2 = false;
-let IsIgnore3 = false;
-let IsIgnore4 = false;
+let eatenPiecesWhite = [];
+let eatenPiecesBlack = [];
 
 /*
 GENERALS FUNCTIONS
@@ -177,7 +175,13 @@ function Board(config) {
                     if (x === whereCanEat[i].x && y === whereCanEat[i].y) {
                         if (me.pieces[x][y] !== undefined) {//on doit manger qqlch.
                             if (currentPiece.player !== me.pieces[x][y].player) {
-                                me.pieces[x][y] = currentPiece;
+                                //Si la pièce mangée est une pièce blanche
+                                if(me.pieces[x][y].player === "W"){
+                                    eatenPiecesWhite.push(me.pieces[x][y]);
+                                }else{//si la pièce est noir
+                                    eatenPiecesBlack.push(me.pieces[x][y]);
+                                }
+                                me.pieces[x][y] = currentPiece;                   
                                 me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
                             }
                         }
@@ -187,12 +191,17 @@ function Board(config) {
                 for (let i = 0; i < whereCanMove.length; i++) {
                     for (let j = 0; j < whereCanMove.length; j++) {
                         if ((whereCanMove[i][j] === true || whereCanEat[i][j] === true) && x === i && y === j) {
+                            if(me.pieces[x][y].player === "W"){
+                                eatenPiecesWhite.push(me.pieces[x][y]);
+                            }else{
+                                eatenPiecesBlack.push(me.pieces[x][y]);
+                            }
                             me.pieces[x][y] = currentPiece;
                             me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
                         }
                     }
                 }
-            }
+            } 
         }
         //dessin des pièces sur l'échiquier
         TheBoard.draw();
@@ -308,7 +317,14 @@ Board.prototype.draw = function () {//dessine l'échiquier avec les pièces
             }
         }
     }
-}
+    //Dessin de la pièce mangée, à côté de l'échiquier.
+    for(let i = 0; i < eatenPiecesWhite.length; i++){
+        eatenPiecesWhite[i].draw(720 + i * 25, 75);
+    }
+    for(let i = 0; i < eatenPiecesBlack.length; i++){
+        eatenPiecesBlack[i].draw(720 + i * 25, 550);
+    }
+};
 
 Board.prototype.canImoveHere = function (x, y) {//détermine à l'aide de cordonnée si une pièce peut se déplacer
     if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {//les cordonnées appartiennent à une case sur l'échiquier.
