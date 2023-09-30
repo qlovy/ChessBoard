@@ -191,17 +191,19 @@ function Board(config) {
                 for (let i = 0; i < whereCanMove.length; i++) {
                     for (let j = 0; j < whereCanMove.length; j++) {
                         if ((whereCanMove[i][j] === true || whereCanEat[i][j] === true) && x === i && y === j) {
-                            if(me.pieces[x][y].player === "W"){
-                                eatenPiecesWhite.push(me.pieces[x][y]);
-                            }else{
-                                eatenPiecesBlack.push(me.pieces[x][y]);
+                            if(me.pieces[x][y] !== undefined){
+                                if(me.pieces[x][y].player === "W"){
+                                    eatenPiecesWhite.push(me.pieces[x][y]);
+                                }else{
+                                    eatenPiecesBlack.push(me.pieces[x][y]);
+                                }
                             }
                             me.pieces[x][y] = currentPiece;
                             me.pieces[currentPiecePosition.x][currentPiecePosition.y] = undefined;
                         }
                     }
                 }
-            } 
+            }
         }
         //dessin des pièces sur l'échiquier
         TheBoard.draw();
